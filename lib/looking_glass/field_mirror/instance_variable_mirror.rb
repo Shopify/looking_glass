@@ -1,7 +1,7 @@
-class LookingGlass
+module LookingGlass
   class InstanceVariableMirror < FieldMirror
     def value
-      reflection.reflect @object.instance_variable_get(@name)
+      LookingGlass.reflect(@object.instance_variable_get(@name))
     end
 
     def value=(o)

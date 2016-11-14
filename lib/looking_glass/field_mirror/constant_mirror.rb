@@ -1,4 +1,4 @@
-class LookingGlass
+module LookingGlass
   class ConstantMirror < FieldMirror
     def value
       if path = @object.autoload?(@name)
@@ -8,7 +8,7 @@ class LookingGlass
           return nil
         end
       end
-      reflection.reflect @object.const_get(@name)
+      LookingGlass.reflect @object.const_get(@name)
     end
 
     def value=(o)

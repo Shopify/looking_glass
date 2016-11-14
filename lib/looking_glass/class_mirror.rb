@@ -1,31 +1,31 @@
-class LookingGlass
+module LookingGlass
   # A specific mirror for a class, that includes all the capabilites
   # and information we can gather about classes.
   class ClassMirror < ObjectMirror
-    reflect! Module
+    reflect!(Module)
 
     # The known class variables.
     # @see #instance_variables
     # @return [FieldMirror]
     def class_variables
-      field_mirrors @subject.class_variables
+      field_mirrors(@subject.class_variables)
     end
 
     # The known class variables.
     # @see #instance_variables
     # @return [FieldMirror]
     def class_instance_variables
-      field_mirrors @subject.instance_variables
+      field_mirrors(@subject.instance_variables)
     end
 
     # The source files this class is defined and/or extended in.
-    # 
+    #
     # @return [Array<String,File>]
     def source_files
       locations = @subject.instance_methods(false).collect do |name|
         method = @subject.instance_method(name)
-        file   = method.source_location if method.respond_to? :source_location
-        file.first if file
+        sl = method.source_location
+        sl.first if sl
       end
       locations.compact.uniq
     end
@@ -34,43 +34,42 @@ class LookingGlass
     #
     # @return [ClassMirror]
     def singleton_class
-      reflection.reflect @subject.singleton_class
+      LookingGlass.reflect(@subject.singleton_class)
     end
 
     # Predicate to determine whether the subject is a singleton class
     #
     # @return [true,false]
     def singleton_class?
-      self.name =~ /^\#<Class:.*>$/
+      name.match(/^\#<Class:.*>$/)
     end
 
     # The mixins included in the ancestors of this class.
     #
     # @return [Array<ClassMirror>]
     def mixins
-      mirrors @subject.ancestors.reject {|m| m.is_a? Class }
+      mirrors(@subject.ancestors.reject { |m| m.is_a?(Class) })
     end
 
     # The direct superclass
     #
     # @return [ClassMirror]
     def superclass
-      reflection.reflect @subject.superclass
+      LookingGlass.reflect(@subject.superclass)
     end
 
     # The known subclasses
     #
     # @return [Array<ClassMirror>]
     def subclasses
-      l = ObjectSpace.each_object(Class).select {|a| a.superclass == @subject }
-      mirrors l
+      mirrors(ObjectSpace.each_object(Class).select { |a| a.superclass == @subject })
     end
 
     # The list of ancestors
     #
     # @return [Array<ClassMirror>]
     def ancestors
-      mirrors @subject.ancestors
+      mirrors(@subject.ancestors)
     end
 
     # The constants defined within this class. This includes nested
@@ -79,7 +78,7 @@ class LookingGlass
     #
     # @return [Array<FieldMirror>]
     def constants
-      field_mirrors @subject.constants
+      field_mirrors(@subject.constants)
     end
 
     # Searches for the named constant in the mirrored namespace. May
@@ -89,7 +88,7 @@ class LookingGlass
     # @return [ClassMirror, nil] the requested constant, or nil
     def constant(str)
       path = str.to_s.split("::")
-      c = path[0..-2].inject(@subject) {|klass,str| klass.const_get(str) }
+      c = path[0..-2].inject(@subject) { |klass, s| klass.const_get(s) }
       field_mirror (c || @subject), path.last
     rescue NameError => e
       p e
@@ -101,12 +100,12 @@ class LookingGlass
     # @return [Array<ClassMirror>]
     def nesting
       ary = []
-      @subject.name.split("::").inject(Object) do |klass,str|
+      @subject.name.split('::').inject(Object) do |klass, str|
         ary << klass.const_get(str)
         ary.last
       end
       ary.reverse
-    rescue NameError => e
+    rescue NameError
       [@subject]
     end
 
@@ -117,11 +116,11 @@ class LookingGlass
     def nested_classes
       nc = @subject.constants.collect do |c|
         # do not trigger autoloads
-        if @subject.const_defined?(c) and not @subject.autoload?(c)
+        if @subject.const_defined?(c) && !@subject.autoload?(c)
           @subject.const_get(c)
         end
-      end.compact.select {|c| Module === c }
-      mirrors nc
+      end
+      mirrors(nc.compact.select { |c| c.is_a?(Module) })
     end
 
     # The instance methods of this class. To get to the class methods,
@@ -137,7 +136,7 @@ class LookingGlass
     #
     # @return [MethodMirror, nil] the method or nil, if none was found
     def method(name)
-      reflection.reflect @subject.instance_method(name)
+      LookingGlass.reflect @subject.instance_method(name)
     end
   end
 end

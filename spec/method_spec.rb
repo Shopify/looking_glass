@@ -5,10 +5,9 @@ describe "MethodMirror" do
   describe "runtime reflection" do
     describe "structural queries" do
       before(:each) do
-        @r = LookingGlass.new
         @f = MethodSpecFixture
         m = MethodSpecFixture.instance_method(:source_location)
-        @m = @r.reflect(m)
+        @m = LookingGlass.reflect(m)
       end
 
       it "file" do
@@ -39,7 +38,7 @@ describe "MethodMirror" do
       end
 
       before do
-        @m = @r.reflect(method(:method_b))
+        @m = LookingGlass.reflect(method(:method_b))
       end
 
       describe "arguments" do
@@ -66,7 +65,7 @@ describe "MethodMirror" do
 
       describe "protection" do
         before do
-          @cm = @r.reflect(MethodSpecFixture)
+          @cm = LookingGlass.reflect(MethodSpecFixture)
         end
 
         it "is public" do
@@ -93,7 +92,7 @@ describe "MethodMirror" do
 
       it "can delete a method from its home class" do
         c = MethodSpecFixture
-        m = @r.reflect c.instance_method(:removeable_method)
+        m = LookingGlass.reflect c.instance_method(:removeable_method)
         c.instance_methods(false).map(&:to_s).should include("removeable_method")
         m.delete
         c.instance_methods(false).map(&:to_s).should_not include("removeable_method")

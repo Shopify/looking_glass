@@ -4,8 +4,7 @@ require 'fixtures/class_spec'
 describe "ClassMirror" do
 
   before do
-    @r = LookingGlass.new
-    @m = @r.reflect(ClassFixture)
+    @m = LookingGlass.reflect(ClassFixture)
   end
 
   describe "queries" do
@@ -70,7 +69,7 @@ describe "ClassMirror" do
     end
 
     it "nesting" do
-      m = @r.reflect ClassFixture::ClassFixtureNested
+      m = LookingGlass.reflect ClassFixture::ClassFixtureNested
       nesting = m.nesting
       nesting.should == [ClassFixture::ClassFixtureNested, ClassFixture]
     end

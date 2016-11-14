@@ -1,6 +1,6 @@
 require 'method_source'
 
-class LookingGlass
+module LookingGlass
   # A MethodMirror should reflect on methods, but in a more general
   # sense than the Method and UnboundMethod classes in Ruby are able
   # to offer.
@@ -31,7 +31,7 @@ class LookingGlass
 
     # @return [ClassMirror] The class this method was originally defined in
     def defining_class
-      reflection.reflect @subject.send(:owner)
+      LookingGlass.reflect @subject.send(:owner)
     end
 
     def delete
@@ -71,7 +71,7 @@ class LookingGlass
     #
     # @return [Array<FieldMirror>]
     def arguments
-      @subject.send(:parameters).map { |t,a| a.to_s }
+      @subject.send(:parameters).map { |_, a| a.to_s }
     end
 
     def protected?
@@ -106,7 +106,7 @@ class LookingGlass
 
     def args(type)
       args = []
-      @subject.send(:parameters).select { |t,n| args << n.to_s if t == type }
+      @subject.send(:parameters).select { |t, n| args << n.to_s if t == type }
       args
     end
 

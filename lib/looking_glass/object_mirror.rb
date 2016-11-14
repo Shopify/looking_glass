@@ -1,4 +1,4 @@
-class LookingGlass
+module LookingGlass
   # A mirror class. It is the most generic mirror and should be able
   # to reflect on any object you can get at in a given system.
   class ObjectMirror < Mirror
@@ -11,7 +11,7 @@ class LookingGlass
 
     # @return [ClassMirror] the a class mirror on the runtime class object
     def target_class
-      reflection.reflect @subject.class
+      LookingGlass.reflect @subject.class
     end
 
     private
@@ -21,7 +21,7 @@ class LookingGlass
     end
 
     def field_mirror(subject, name)
-      reflection.reflect FieldMirror::Field.new(subject, name)
+      LookingGlass.reflect FieldMirror::Field.new(subject, name)
     end
   end
 end

@@ -1,4 +1,4 @@
-class LookingGlass
+module LookingGlass
   # The basic mirror. This is the lib code. It is also the factory to
   # use for creating new mirrors on any kind of object. Its #reflect
   # class method will return an appropriate mirror for a given object,
@@ -19,26 +19,17 @@ class LookingGlass
       #   do with it
       # @param [LookingGlass] the instance of a LookingGlass this mirror was
       #   spawned in.
-      def reflect(obj, reflection)
+      def reflect(obj)
         target_mirror = nil
-        @@mirrors.detect {|klass| target_mirror = klass.mirror_class(obj) }
-        target_mirror.new(obj, reflection)
-      end
-
-      # The constructor, sets the @reflection instance variable before
-      # calling initialize.
-      def new(obj, reflection)
-        basic_new_object = allocate
-        basic_new_object.reflection = reflection
-        basic_new_object.send(:initialize, obj)
-        basic_new_object
+        @@mirrors.detect { |klass| target_mirror = klass.mirror_class(obj) }
+        target_mirror.new(obj)
       end
 
       # Decides whether the given class can reflect on [obj]
       # @param [Object] the object to reflect upon
       # @return [true, false]
       def reflects?(obj)
-        @reflected_modules.any? { |mod| mod === obj }
+        @reflected_modules.any? { |mod| obj.is_a?(mod) }
       end
 
       # A shortcut to define reflects? behavior.
@@ -72,7 +63,6 @@ class LookingGlass
     end
 
     extend ClassMethods
-    attr_accessor :reflection
 
     def initialize(obj)
       @subject = obj
@@ -96,7 +86,7 @@ class LookingGlass
     private
 
     def mirrors(list)
-      list.collect {|each| reflection.reflect each }
+      list.collect { |e| LookingGlass.reflect(e) }
     end
   end
 end
