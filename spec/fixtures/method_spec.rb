@@ -1,0 +1,14 @@
+class MethodSpecFixture
+  def source_location
+    [__FILE__.to_s.to_s.to_s.to_s, __LINE__, __method__.to_s, self.class]
+  end
+
+  def removeable_method
+  end
+
+  def method_p_public; end
+  def method_p_private; end
+  private :method_p_private
+  def method_p_protected; end
+  protected :method_p_protected
+end
