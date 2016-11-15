@@ -34,13 +34,9 @@ module LookingGlass
       LookingGlass.reflect @subject.send(:owner)
     end
 
-    def delete
-      @subject.send(:owner).send(:remove_method, @subject.name)
-    end
-
     # Return the value the block argument, or nil
     #
-    # @return [FieldMirror, nil]
+    # @return [String, nil]
     def block_argument
       args(:block).first
     end
@@ -48,20 +44,21 @@ module LookingGlass
     # Returns a field mirror with name and possibly value of the splat
     # argument, or nil, if there is none to this method.
     #
-    # @return [FieldMirror, nil]
+    # @return [String, nil]
     def splat_argument
       args(:rest).first
     end
 
     # Returns names and values of the optional arguments.
     #
-    # @return [Array<FieldMirror>, nil]
+    # @return [Array<String>, nil]
     def optional_arguments
       args(:opt)
     end
 
     # Returns the name and possibly values of the required arguments
-    # @return [Array<FieldMirror>, nil]
+    #
+    # @return [Array<String>]
     def required_arguments
       args(:req)
     end
@@ -69,21 +66,30 @@ module LookingGlass
     # Queries the method for it's arguments and returns a list of
     # mirrors that hold name and value information.
     #
-    # @return [Array<FieldMirror>]
+    # @return [Array<String>]
     def arguments
       @subject.send(:parameters).map { |_, a| a.to_s }
     end
 
+    # Is the method :public, :private, or :protected?
+    #
+    # @return [String]
+    def visibility
+      return :public  if visibility?(:public)
+      return :private if visibility?(:private)
+      :protected
+    end
+
     def protected?
-      visibility? :protected
+      visibility?(:protected)
     end
 
     def public?
-      visibility? :public
+      visibility?(:public)
     end
 
     def private?
-      visibility? :private
+      visibility?(:private)
     end
 
     # @return [String] The source code of this method
@@ -91,7 +97,15 @@ module LookingGlass
       @subject.send(:source)
     end
 
-    # Returns the compiled code if available. Disasemble it with `.disasm`
+    # Returns the disassembled code if available.
+    #
+    # @return [String, nil] human-readable bytedcode dump
+    def bytecode
+      RubyVM::InstructionSequence.of(@subject).disasm
+    end
+
+    # Returns the compiled code if available.
+    #
     # @return [RubyVM::InstructionSequence, nil] native code
     def native_code
       RubyVM::InstructionSequence.of(@subject)

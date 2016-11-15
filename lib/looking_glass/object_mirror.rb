@@ -6,22 +6,22 @@ module LookingGlass
 
     # @return [FieldMirror] the instance variables of the object
     def variables
-      field_mirrors @subject.instance_variables
+      field_mirrors(@subject.instance_variables)
     end
 
     # @return [ClassMirror] the a class mirror on the runtime class object
     def target_class
-      LookingGlass.reflect @subject.class
+      LookingGlass.reflect(@subject.class)
     end
 
     private
 
     def field_mirrors(list, subject = @subject)
-      list.collect { |name| field_mirror subject, name }
+      list.map { |name| field_mirror(subject, name) }
     end
 
     def field_mirror(subject, name)
-      LookingGlass.reflect FieldMirror::Field.new(subject, name)
+      LookingGlass.reflect(FieldMirror::Field.new(subject, name))
     end
   end
 end

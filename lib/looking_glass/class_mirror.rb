@@ -6,14 +6,14 @@ module LookingGlass
 
     # The known class variables.
     # @see #instance_variables
-    # @return [FieldMirror]
+    # @return [Array<FieldMirror>]
     def class_variables
       field_mirrors(@subject.class_variables)
     end
 
     # The known class variables.
     # @see #instance_variables
-    # @return [FieldMirror]
+    # @return [Array<FieldMirror>]
     def class_instance_variables
       field_mirrors(@subject.instance_variables)
     end

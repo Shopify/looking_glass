@@ -33,6 +33,7 @@ module LookingGlass
       assert(m.public?)
       refute(m.protected?)
       refute(m.private?)
+      assert_equal(:public, m.visibility)
     end
 
     def test_protected_method
@@ -40,6 +41,7 @@ module LookingGlass
       refute(m.public?)
       assert(m.protected?)
       refute(m.private?)
+      assert_equal(:protected, m.visibility)
     end
 
     def test_private_method
@@ -47,6 +49,7 @@ module LookingGlass
       refute(m.public?)
       refute(m.protected?)
       assert(m.private?)
+      assert_equal(:private, m.visibility)
     end
 
     def test_delete_method
