@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- spec/*`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_development_dependency 'mspec',         '~> 1.9'
+  s.add_development_dependency 'minitest',      '~> 5.0'
   s.add_runtime_dependency     'method_source', '~> 0.8'
 end

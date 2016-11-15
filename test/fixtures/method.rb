@@ -1,6 +1,6 @@
 class MethodSpecFixture
   def source_location
-    [__FILE__.to_s.to_s.to_s.to_s, __LINE__, __method__.to_s, self.class]
+    [__FILE__, __LINE__, __method__.to_s, self.class]
   end
 
   def removeable_method
