@@ -69,7 +69,12 @@ module LookingGlass
     end
 
     # A generic representation of the object under observation.
+    MODULE_INSPECT = Module.method(:inspect).unbind
     def name
+      # ignore downstream redefinitions
+      MODULE_INSPECT.bind(@subject).call
+    rescue TypeError
+      # for non-module/non-class types (e.g. String#inspect)
       @subject.inspect
     end
 
