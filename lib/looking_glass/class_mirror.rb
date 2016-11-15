@@ -128,7 +128,10 @@ module LookingGlass
     #
     # @return [Array<MethodMirror>]
     def methods
-      @subject.instance_methods(false).collect(&:to_s)
+      names = @subject.instance_methods(false).collect(&:to_s)
+      names.map do |name|
+        LookingGlass.reflect(@subject.instance_method(name))
+      end
     end
 
     # The instance method of this class or any of its superclasses
@@ -137,6 +140,12 @@ module LookingGlass
     # @return [MethodMirror, nil] the method or nil, if none was found
     def method(name)
       LookingGlass.reflect @subject.instance_method(name)
+    end
+
+    # to work around overridden `name` methods
+    MODULE_INSPECT = Module.method(:inspect).unbind
+    def name
+      MODULE_INSPECT.bind(@subject).call
     end
   end
 end

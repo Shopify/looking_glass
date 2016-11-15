@@ -111,6 +111,10 @@ module LookingGlass
       RubyVM::InstructionSequence.of(@subject)
     end
 
+    def name
+      @subject.name
+    end
+
     private
 
     def visibility?(type)

@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 
 require 'looking_glass/graph'
+require 'looking_glass/graph/server'
 
 module LookingGlass
   module Graph
@@ -14,24 +15,22 @@ module LookingGlass
         end
       end
 
-      # field :class do
-      #   type ClassType
-      #   argument :name, !types.String
-      #   resolve ->(_, args, _) do
-      #     LookingGlass.reflect(
-      #       Kernel.const_get(args[:name])
-      #     )
-      #   end
-      # end
+      field(:class) do
+        type ClassType
+        argument :name, !types.String
+        resolve ->(_, args, _) do
+          LookingGlass.reflect(
+            Kernel.const_get(args[:name])
+          )
+        end
+      end
     end
 
     Schema = GraphQL::Schema.define do
       query QueryType
     end
-
-    query_string = '{ allClasses { name }}'
-    result = Schema.execute(query_string)
-
-    puts result
   end
 end
+
+require 'rack'
+Rack::Handler::WEBrick.run(LookingGlass::Graph::Server.new)

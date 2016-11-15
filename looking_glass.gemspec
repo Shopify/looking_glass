@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency     'method_source', '~> 0.8'
   s.add_runtime_dependency     'graphql',       '~> 1.2'
+  s.add_runtime_dependency     'rack',          '~> 2.0'
 end
