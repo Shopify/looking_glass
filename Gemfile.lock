@@ -2,11 +2,13 @@ PATH
   remote: .
   specs:
     looking_glass (0.0.1)
+      graphql (~> 1.2)
       method_source (~> 0.8)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    graphql (1.2.3)
     method_source (0.8.2)
     minitest (5.9.1)
 
