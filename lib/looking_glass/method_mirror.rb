@@ -101,7 +101,8 @@ module LookingGlass
     #
     # @return [String, nil] human-readable bytedcode dump
     def bytecode
-      RubyVM::InstructionSequence.of(@subject).disasm
+      iseq = RubyVM::InstructionSequence.of(@subject)
+      iseq ? iseq.disasm : nil
     end
 
     # Returns the compiled code if available.

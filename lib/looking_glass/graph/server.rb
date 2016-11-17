@@ -10,7 +10,7 @@ module LookingGlass
         [
           200,
           { 'Content-Type' => 'application/json' },
-          [JSON.dump(Schema.execute(query))]
+          [JSON.pretty_generate(Schema.execute(query))]
         ]
       end
     end
