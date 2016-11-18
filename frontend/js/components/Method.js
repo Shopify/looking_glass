@@ -19,15 +19,13 @@ class Method extends React.Component {
   }
   render() {
     var {method} = this.props;
-    if (this._hasLink(method)) {
       return (
-        <li>{this._visibilityGlyph(method)} <a href={this._link(method)}>{method.name}</a></li>
+        <div>
+          <a href="#" onClick={() => this.props.inspector(method)}>
+            {this._visibilityGlyph(method)} {method.name}
+          </a>
+        </div>
       );
-    } else {
-      return (
-        <li>{this._visibilityGlyph(method)} {method.name}</li>
-      );
-    }
   }
 }
 

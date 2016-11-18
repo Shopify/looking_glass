@@ -6,7 +6,8 @@ module LookingGlass
     MethodType = GraphQL::ObjectType.define do
       name 'Method'
 
-      field :id, !types.ID
+      interfaces [GraphQL::Relay::Node.interface]
+      global_id_field :id
 
       # Mirror
       field :name, !types.String

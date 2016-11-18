@@ -6,11 +6,11 @@ require 'looking_glass/graph/server'
 module LookingGlass
   module Graph
     class Viewer
-      def id
-        '1'
+      def self.id
+        __id__
       end
 
-      def classes
+      def self.classes
         Object
           .constants
           .map { |name| Object.const_get(name) }
@@ -21,8 +21,23 @@ module LookingGlass
 
     ViewerType = GraphQL::ObjectType.define do
       name 'Viewer'
-      field :id, !types.ID
+      interfaces [GraphQL::Relay::Node.interface]
+      global_id_field :id
+
       field :classes, types[ClassType]
+
+      field :method do
+        type MethodType
+        argument :id, !types.ID
+        resolve ->(_, args, _) do
+          id = args[:id].to_i
+          return nil if id < 0
+          obj = ObjectSpace._id2ref(id)
+          return nil unless obj
+          return obj if obj == Viewer
+          LookingGlass.reflect(obj)
+        end
+      end
     end
 
     QueryType = GraphQL::ObjectType.define do
@@ -30,7 +45,7 @@ module LookingGlass
 
       field(:viewer) do
         type ViewerType
-        resolve ->(_, _, _) { Viewer.new }
+        resolve ->(_, _, _) { Viewer }
       end
 
       field(:allClasses) do
@@ -57,6 +72,29 @@ module LookingGlass
 
     Schema = GraphQL::Schema.define do
       query QueryType
+
+      resolve_type ->(object, ctx) {
+        case object
+        when Viewer
+          ViewerType
+        when ClassMirror
+          ClassType
+        when MethodMirror
+          MethodType
+        when FieldMirror
+          FieldType
+        else
+          raise 'wat'
+        end
+      }
+
+      id_from_object ->(object, type_definition, query_ctx) {
+        object.id
+      }
+
+      object_from_id ->(id, query_ctx) {
+        raise 'nope'
+      }
     end
   end
 end

@@ -3,6 +3,156 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed, 
+      figure, figcaption, footer, header, hgroup, 
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure, 
+      footer, header, hgroup, menu, nav, section {
+        display: block;
+      }
+      body {
+        line-height: 1;
+      }
+      ol, ul {
+        list-style: none;
+      }
+      blockquote, q {
+        quotes: none;
+      }
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+        content: '';
+        content: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+
+      body {
+        font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif;
+        font-size: 14px;
+        color: rgb(48, 57, 66);
+        line-height: 1.3em;
+      }
+
+      .Pane {
+        padding: 4px;
+      }
+
+      .tree-view {
+        overflow-y: hidden;
+      }
+
+      .tree-view_item {
+      }
+
+      .tree-view_children {
+        margin-left: 16px;
+      }
+
+      .tree-view_children-collapsed {
+        height: 0px;
+      }
+
+      .tree-view_arrow {
+        cursor: pointer;
+        margin-right: 6px;
+        display: inline-block;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .tree-view_arrow:after {
+        content: '▾';
+      }
+
+      .tree-view_arrow-collapsed {
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+      }
+
+
+
+      .Resizer {
+          background: #000;
+          opacity: .2;
+          z-index: 1;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          -moz-background-clip: padding;
+          -webkit-background-clip: padding;
+          background-clip: padding-box;
+      }
+
+       .Resizer:hover {
+          -webkit-transition: all 2s ease;
+          transition: all 2s ease;
+      }
+
+       .Resizer.horizontal {
+          height: 11px;
+          margin: -5px 0;
+          border-top: 5px solid rgba(255, 255, 255, 0);
+          border-bottom: 5px solid rgba(255, 255, 255, 0);
+          cursor: row-resize;
+          width: 100%;
+      }
+
+      .Resizer.horizontal:hover {
+          border-top: 5px solid rgba(0, 0, 0, 0.5);
+          border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+      }
+
+      .Resizer.vertical {
+          width: 11px;
+          margin: 0 -5px;
+          border-left: 5px solid rgba(255, 255, 255, 0);
+          border-right: 5px solid rgba(255, 255, 255, 0);
+          cursor: col-resize;
+      }
+
+      .Resizer.vertical:hover {
+          border-left: 5px solid rgba(0, 0, 0, 0.5);
+          border-right: 5px solid rgba(0, 0, 0, 0.5);
+      }
+      Resizer.disabled {
+        cursor: not-allowed;
+      }
+      Resizer.disabled:hover {
+        border-color: transparent;
+      }
+
+
+
+
+    </style>
     <title>Looking Glass</title>
   </head>
   <body>

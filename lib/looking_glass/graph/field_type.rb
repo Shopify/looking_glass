@@ -5,7 +5,8 @@ module LookingGlass
     FieldType = GraphQL::ObjectType.define do
       name 'Field'
 
-      field :id, !types.ID
+      interfaces [GraphQL::Relay::Node.interface]
+      global_id_field :id
 
       # Mirror
       field :name, !types.String

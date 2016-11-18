@@ -10,10 +10,9 @@ module LookingGlass
         variables = data['variables']
 
         puts query
-        _ = variables
+        puts variables.inspect
 
         res = JSON.pretty_generate(Schema.execute(query))
-        # puts res
         [
           200,
           { 'Content-Type' => 'application/json' },

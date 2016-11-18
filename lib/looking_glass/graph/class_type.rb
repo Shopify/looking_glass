@@ -7,7 +7,8 @@ module LookingGlass
     ClassType = GraphQL::ObjectType.define do
       name 'Class'
 
-      field :id, !types.ID
+      interfaces [GraphQL::Relay::Node.interface]
+      global_id_field :id
 
       # Mirror
       field :name, !types.String
