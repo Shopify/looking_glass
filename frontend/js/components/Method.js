@@ -2,12 +2,6 @@ import React from 'react';
 import Relay from 'react-relay';
 
 class Method extends React.Component {
-  _hasLink(method) {
-    return method.file && method.line;
-  }
-  _link(method) {
-    return `file://${method.file}#${method.line}`;
-  }
   _visibilityGlyph(method) {
     if (method.visibility == "private") {
       return "-";
@@ -34,8 +28,6 @@ export default Relay.createContainer(Method, {
     method: () => Relay.QL`
       fragment on Method {
         name,
-        file,
-        line,
         visibility,
       }
     `,

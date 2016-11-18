@@ -127,9 +127,11 @@ module LookingGlass
     #
     # @return [Array<MethodMirror>]
     def methods
-      names = @subject.instance_methods(false).collect(&:to_s)
-      names.map do |name|
-        LookingGlass.reflect(@subject.instance_method(name))
+      @methods ||= begin
+        names = @subject.instance_methods(false).collect(&:to_s)
+        names.map do |name|
+          LookingGlass.reflect(@subject.instance_method(name))
+        end
       end
     end
 

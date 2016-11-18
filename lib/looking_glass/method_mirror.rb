@@ -98,6 +98,8 @@ module LookingGlass
     # @return [String] The source code of this method
     def source
       @subject.send(:source)
+    rescue MethodSource::SourceNotFoundError
+      "(source not available)"
     end
 
     # Returns the disassembled code if available.

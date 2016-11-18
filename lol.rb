@@ -43,6 +43,8 @@ module LookingGlass
     QueryType = GraphQL::ObjectType.define do
       name "Query"
 
+      field(:node, GraphQL::Relay::Node.field)
+
       field(:viewer) do
         type ViewerType
         resolve ->(_, _, _) { Viewer }
@@ -74,9 +76,8 @@ module LookingGlass
       query QueryType
 
       resolve_type ->(object, ctx) {
+        return ViewerType if object == Viewer
         case object
-        when Viewer
-          ViewerType
         when ClassMirror
           ClassType
         when MethodMirror
@@ -84,6 +85,7 @@ module LookingGlass
         when FieldMirror
           FieldType
         else
+          puts object.inspect
           raise 'wat'
         end
       }
@@ -93,7 +95,8 @@ module LookingGlass
       }
 
       object_from_id ->(id, query_ctx) {
-        raise 'nope'
+        obj = ObjectSpace._id2ref(id.to_i)
+        obj == Viewer ? obj : LookingGlass.reflect(obj)
       }
     end
   end

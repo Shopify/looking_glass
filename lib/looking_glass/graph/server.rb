@@ -12,7 +12,8 @@ module LookingGlass
         puts query
         puts variables.inspect
 
-        res = JSON.pretty_generate(Schema.execute(query))
+        res = JSON.pretty_generate(Schema.execute(query, variables: variables))
+        puts res if res.size < 9000
         [
           200,
           { 'Content-Type' => 'application/json' },

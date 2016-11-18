@@ -3,9 +3,12 @@ import Relay from 'react-relay';
 
 class Details extends React.Component {
   render() {
-    if (this.props.obj) {
+    var {method} = this.props.relay;
+    if (method) {
       return (
-        <ul></ul>
+        <ul>
+        <li>name: {method.name}</li>
+        </ul>
       );
     } else {
       return (

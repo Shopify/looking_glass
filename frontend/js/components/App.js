@@ -13,11 +13,10 @@ class App extends React.Component {
     };
   }
   _setObject = (obj) => {
-    console.log(obj);
-    this.props.relay.setVariables({methodId: obj.__dataID__});
     this.setState({
       detailsObject: obj,
     });
+    this.props.relay.setVariables({methodId: obj.__dataID__});
   }
   render() {
     var klasses = this.props.viewer.classes;
