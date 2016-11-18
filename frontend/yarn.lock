@@ -972,10 +972,6 @@ chokidar@1.6.0:
   optionalDependencies:
     fsevents "^1.0.0"
 
-classnames@2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
-
 cliui@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cliui/-/cliui-2.1.0.tgz#4b475760ff80264c762c3a1719032e91c7fea0d1"
@@ -1474,21 +1470,9 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql-relay@0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.4.3.tgz#272ed9f5949d473c133db12681ed79c7bc2788d5"
-  dependencies:
-    babel-runtime "^6.9.0"
-
 graphql@^0.6.0:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.6.2.tgz#19cdcb17e5862d64396a0684f92f7be64e90e7af"
-  dependencies:
-    iterall "1.0.2"
-
-graphql@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.7.0.tgz#5701492838edc6c673c184075eb8f06b11a7e451"
   dependencies:
     iterall "1.0.2"
 

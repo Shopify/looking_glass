@@ -1,8 +1,8 @@
 {
-  "name": "relay-starter-kit",
+  "name": "looking_glass",
   "private": true,
-  "description": "A quick way to get up and running with Relay",
-  "repository": "facebook/relay-starter-kit",
+  "description": "Frontend for Looking Glass, a ruby object browser",
+  "repository": "Shopify/looking_glass",
   "version": "0.1.0",
   "scripts": {
     "start": "babel-node ./server.js"
@@ -16,10 +16,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-relay-plugin": "0.9.3",
     "chokidar": "1.6.0",
-    "classnames": "2.2.5",
     "express": "4.14.0",
-    "graphql": "0.7.0",
-    "graphql-relay": "0.4.3",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-relay": "0.9.3",
