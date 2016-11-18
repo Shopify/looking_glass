@@ -5,6 +5,8 @@ module LookingGlass
     FieldType = GraphQL::ObjectType.define do
       name 'Field'
 
+      field :id, !types.ID
+
       # Mirror
       field :name, !types.String
       # field :mirrors?(other)

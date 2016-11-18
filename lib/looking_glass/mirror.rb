@@ -68,6 +68,10 @@ module LookingGlass
       @subject = obj
     end
 
+    def id
+      @subject.__id__.to_s
+    end
+
     # A generic representation of the object under observation.
     def name
       @subject.inspect

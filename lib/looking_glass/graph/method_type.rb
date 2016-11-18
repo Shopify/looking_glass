@@ -6,14 +6,16 @@ module LookingGlass
     MethodType = GraphQL::ObjectType.define do
       name 'Method'
 
+      field :id, !types.ID
+
       # Mirror
       field :name, !types.String
       # field :mirrors?(other)
       # field :reflectee
 
       # MethodMirror
-      field :file,                !types.String
-      field :line,                !types.Int
+      field :file,                 types.String
+      field :line,                 types.Int
       field :selector,            !types.String
       field :defining_class, -> { !ClassType }
       field :block_argument,       FieldType

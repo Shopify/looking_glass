@@ -7,6 +7,8 @@ module LookingGlass
     ClassType = GraphQL::ObjectType.define do
       name 'Class'
 
+      field :id, !types.ID
+
       # Mirror
       field :name, !types.String
       # field :mirrors?(other)
@@ -21,7 +23,7 @@ module LookingGlass
       field :class_instance_variables, !types[FieldType]
       field :source_files,             !types[!types.String]
       field :singleton_class,     -> { !ClassType }
-      field :singleton_class?,         !types.Boolean
+      field :is_singleton_class,       !types.Boolean
       field :mixins,              -> { !types[ClassType] }
       field :superclass,          -> {  ClassType }
       field :subclasses,          -> { !types[ClassType] }

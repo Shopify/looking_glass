@@ -74,7 +74,6 @@ module LookingGlass
 
     # The constants defined within this class. This includes nested
     # classes and modules, but also all other kinds of constants.
-    # This should _not_ trigger autoloads!
     #
     # @return [Array<FieldMirror>]
     def constants

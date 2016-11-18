@@ -1,4 +1,5 @@
 require 'method_source'
+require 'base64'
 
 module LookingGlass
   # A MethodMirror should reflect on methods, but in a more general
@@ -14,14 +15,16 @@ module LookingGlass
   class MethodMirror < Mirror
     reflect! Method, UnboundMethod
 
-    # @return [String] The filename
+    # @return [String, nil] The filename, if available
     def file
-      source_location.first
+      sl = source_location
+      sl ? sl.first : nil
     end
 
-    # @return [Fixnum] The source line
+    # @return [Fixnum, nil] The source line, if available
     def line
-      source_location.last - 1
+      sl = source_location
+      sl && sl.last ? sl.last - 1 : nil
     end
 
     # @return [String] The method name
