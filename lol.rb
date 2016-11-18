@@ -63,7 +63,7 @@ end
 
 if ARGV[0] == 'u'
   schema = LookingGlass::Graph::Schema.execute(GraphQL::Introspection::INTROSPECTION_QUERY)
-  File.write('schema.json', JSON.dump(schema))
+  File.write('frontend/data/schema.json', JSON.dump(schema))
   puts 'schema.json updated'
 else
   require 'rack'
