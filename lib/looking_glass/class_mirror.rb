@@ -151,5 +151,9 @@ module LookingGlass
     def name
       MODULE_INSPECT.bind(@subject).call
     end
+
+    def demodulized_name
+      name.split('::').last
+    end
   end
 end
