@@ -5,17 +5,52 @@ require 'looking_glass/graph/server'
 
 module LookingGlass
   module Graph
-    class Viewer
-      def self.id
-        __id__
+    module IDGen
+      def self.obj2id(object)
+        case object
+        when Viewer
+          'v'
+        when ClassMirror
+          "c#{object.subject_id}"
+        when MethodMirror
+          klass_id = object.defining_class.subject_id
+          "m#{klass_id}##{object.name}"
+        when FieldMirror
+          "c#{object.subject_id}" # TODO: GC will break this.
+        else
+          raise "unexpected object type: #{object.inspect}"
+        end
       end
 
-      def self.classes
+      def self.id2obj(id)
+        puts "\x1b[34mloading id: #{id}\x1b[0m"
+        case id[0]
+        when 'v'
+          Viewer.new
+        when '-' # just wants empty result, usually '-1'
+          return nil
+        when 'c' # class
+          obj = ObjectSpace._id2ref(id[1..-1].to_i)
+          obj ? LookingGlass.reflect(obj) : nil
+        when 'm' # method
+          parts = id[1..-1].split('#')
+          obj = ObjectSpace._id2ref(parts[0].to_i)
+          mirror = obj ? LookingGlass.reflect(obj) : nil
+          mirror.method(parts[1])
+        else
+          raise "unexpected id type: #{id}"
+        end
+      end
+    end
+
+    class Viewer
+      def classes
         Object
           .constants
           .map { |name| Object.const_get(name) }
           .select { |const| const.is_a?(Module) } # class inherits Module
           .map { |mod| LookingGlass.reflect(mod) }
+          .sort_by(&:name)
       end
     end
 
@@ -30,12 +65,7 @@ module LookingGlass
         type MethodType
         argument :id, !types.ID
         resolve ->(_, args, _) do
-          id = args[:id].to_i
-          return nil if id < 0
-          obj = ObjectSpace._id2ref(id)
-          return nil unless obj
-          return obj if obj == Viewer
-          LookingGlass.reflect(obj)
+          IDGen.id2obj(args[:id])
         end
       end
     end
@@ -47,7 +77,7 @@ module LookingGlass
 
       field(:viewer) do
         type ViewerType
-        resolve ->(_, _, _) { Viewer }
+        resolve ->(_, _, _) { Viewer.new }
       end
 
       field(:allClasses) do
@@ -75,9 +105,11 @@ module LookingGlass
     Schema = GraphQL::Schema.define do
       query QueryType
 
-      resolve_type ->(object, ctx) {
+      resolve_type ->(object, _ctx) do
         return ViewerType if object == Viewer
         case object
+        when Viewer
+          ViewerType
         when ClassMirror
           ClassType
         when MethodMirror
@@ -85,19 +117,17 @@ module LookingGlass
         when FieldMirror
           FieldType
         else
-          puts object.inspect
-          raise 'wat'
+          raise "unexpected type: #{object.inspect}"
         end
-      }
+      end
 
-      id_from_object ->(object, type_definition, query_ctx) {
-        object.id
-      }
+      id_from_object ->(object, _type_definition, _query_ctx) do
+        IDGen.obj2id(object)
+      end
 
-      object_from_id ->(id, query_ctx) {
-        obj = ObjectSpace._id2ref(id.to_i)
-        obj == Viewer ? obj : LookingGlass.reflect(obj)
-      }
+      object_from_id ->(id, _query_ctx) do
+        IDGen.id2obj(id)
+      end
     end
   end
 end

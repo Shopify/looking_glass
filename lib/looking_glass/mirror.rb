@@ -68,7 +68,7 @@ module LookingGlass
       @subject = obj
     end
 
-    def id
+    def subject_id
       @subject.__id__.to_s
     end
 

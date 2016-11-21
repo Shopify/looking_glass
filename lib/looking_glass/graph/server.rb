@@ -9,11 +9,13 @@ module LookingGlass
         query     = data['query']
         variables = data['variables']
 
-        puts query
-        puts variables.inspect
+        debug = ENV.has_key?('DEBUG')
+
+        puts query if debug
+        puts variables.inspect if debug
 
         res = JSON.pretty_generate(Schema.execute(query, variables: variables))
-        puts res if res.size < 9000
+        puts res if debug && res.size < 9000
         [
           200,
           { 'Content-Type' => 'application/json' },
