@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 
-class Method extends React.Component {
+class MethodTreeItem extends React.Component {
   _visibilityGlyph(method) {
     if (method.visibility == "private") {
       return "-";
@@ -23,7 +23,7 @@ class Method extends React.Component {
   }
 }
 
-export default Relay.createContainer(Method, {
+export default Relay.createContainer(MethodTreeItem, {
   fragments: {
     method: () => Relay.QL`
       fragment on Method {

@@ -2,7 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import SplitPane from 'react-split-pane';
 
-import Klass from './Klass';
+import ClassTreeItem from './ClassTreeItem';
 import Details from './Details';
 
 class App extends React.Component {
@@ -19,17 +19,15 @@ class App extends React.Component {
     this.props.relay.setVariables({methodId: obj.__dataID__});
   }
   render() {
-    var klasses = this.props.viewer.classes;
+    var classes = this.props.viewer.classes;
     return (
       <SplitPane split="vertical" minSize={50} defaultSize={400}>
         <div>
-          {klasses.map(klass => (
-            <Klass key={klass.id} inspector={this._setObject} klass={klass} />
+          {classes.map(klass => (
+            <ClassTreeItem key={klass.id} inspector={this._setObject} klass={klass} />
           ))}
         </div>
-        <div>
-          <Details method={this.state.detailsObject} />
-        </div>
+        <Details method={this.state.detailsObject} />
       </SplitPane>
     );
   }
@@ -44,7 +42,7 @@ export default Relay.createContainer(App, {
       fragment on Viewer {
         classes {
           id,
-          ${Klass.getFragment('klass')}
+          ${ClassTreeItem.getFragment('klass')}
         }
         method(id: $methodId) {
           ${Details.getFragment('method')}
