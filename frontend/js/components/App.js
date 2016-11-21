@@ -6,28 +6,23 @@ import ClassTreeItem from './ClassTreeItem';
 import Details from './Details';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      detailsObject: null,
-    };
-  }
   _setObject = (obj) => {
-    this.setState({
-      detailsObject: obj,
-    });
-    this.props.relay.setVariables({methodId: obj.__dataID__});
+    this.props.relay.setVariables({focusObj: obj});
   }
+
   render() {
-    var classes = this.props.viewer.classes;
+    var {classes, method} = this.props.store;
     return (
       <SplitPane split="vertical" minSize={50} defaultSize={400}>
         <div>
           {classes.map(klass => (
-            <ClassTreeItem key={klass.id} inspector={this._setObject} klass={klass} />
+            <ClassTreeItem
+              store={klass}
+              key={klass.id}
+              inspector={this._setObject} />
           ))}
         </div>
-        <Details method={this.state.detailsObject} />
+        <Details store={method} />
       </SplitPane>
     );
   }
@@ -35,17 +30,32 @@ class App extends React.Component {
 
 export default Relay.createContainer(App, {
   initialVariables: {
+    focusObj: null,
     methodId: "-1",
   },
+
+  prepareVariables: (prevVariables) => {
+
+    var id = "-1";
+    if (prevVariables.focusObj !== null) {
+      id = prevVariables.focusObj.__dataID__.toString();
+    }
+
+    return {
+      ...prevVariables,
+      methodId: id,
+    };
+  },
+
   fragments: {
-    viewer: (variables) => Relay.QL`
+    store: (variables) => Relay.QL`
       fragment on Viewer {
         classes {
           id,
-          ${ClassTreeItem.getFragment('klass')}
+          ${ClassTreeItem.getFragment('store')}
         }
         method(id: $methodId) {
-          ${Details.getFragment('method')}
+          ${Details.getFragment('store')}
         }
       }
     `,

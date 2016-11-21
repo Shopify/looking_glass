@@ -3,11 +3,15 @@ import Relay from 'react-relay';
 
 class Details extends React.Component {
   render() {
-    var {method} = this.props.relay;
+    var method = this.props.store;
     if (method) {
       return (
         <ul>
         <li>name: {method.name}</li>
+        <li>file: {method.file}</li>
+        <li>line: {method.line}</li>
+        <li>source:<code><pre>{method.source}</pre></code></li>
+        <li>bytecode:<code><pre>{method.bytecode}</pre></code></li>
         </ul>
       );
     } else {
@@ -20,12 +24,13 @@ class Details extends React.Component {
 
 export default Relay.createContainer(Details, {
   fragments: {
-    method: () => Relay.QL`
+    store: () => Relay.QL`
       fragment on Method {
         name,
         file,
         line,
         source,
+        bytecode,
       }
     `,
   },

@@ -11,11 +11,11 @@ import MethodTreeItem from './MethodTreeItem';
 
 class ClassTreeItem extends React.Component {
   render() {
-    var {klass} = this.props;
+    var klass = this.props.store;
     return (
       <TreeView key={klass.id} nodeLabel={klass.name} defaultCollapsed={true}>
         {klass.methods.map(method => (
-          <MethodTreeItem key={method.id} inspector={this.props.inspector} method={method} />
+          <MethodTreeItem store={method} key={method.id} inspector={this.props.inspector} />
         ))}
       </TreeView>
     );
@@ -24,12 +24,12 @@ class ClassTreeItem extends React.Component {
 
 export default Relay.createContainer(ClassTreeItem, {
   fragments: {
-    klass: () => Relay.QL`
+    store: () => Relay.QL`
       fragment on Class {
         name,
         methods {
           id,
-          ${MethodTreeItem.getFragment('method')}
+          ${MethodTreeItem.getFragment('store')}
         }
       }
     `,

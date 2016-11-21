@@ -11,8 +11,9 @@ class MethodTreeItem extends React.Component {
       return "#";
     }
   }
+
   render() {
-    var {method} = this.props;
+    var method = this.props.store;
       return (
         <div>
           <a href="#" onClick={() => this.props.inspector(method)}>
@@ -25,7 +26,7 @@ class MethodTreeItem extends React.Component {
 
 export default Relay.createContainer(MethodTreeItem, {
   fragments: {
-    method: () => Relay.QL`
+    store: () => Relay.QL`
       fragment on Method {
         name,
         visibility,
