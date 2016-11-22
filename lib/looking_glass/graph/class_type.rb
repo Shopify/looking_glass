@@ -34,6 +34,7 @@ module LookingGlass
       # field :constant(str)
       field :nesting,             -> { !types[ClassType] }
       field :nested_classes,      -> { !types[ClassType] }
+      field :nested_class_count,       !types.Int
       field :methods,                  !types[MethodType]
       # field :method(name)
     end

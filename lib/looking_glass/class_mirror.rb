@@ -122,6 +122,10 @@ module LookingGlass
       mirrors(nc.compact.select { |c| c.is_a?(Module) })
     end
 
+    def nested_class_count
+      nested_classes.count
+    end
+
     # The instance methods of this class. To get to the class methods,
     # ask the #singleton_class for its methods.
     #
