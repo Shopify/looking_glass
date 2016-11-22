@@ -5,7 +5,7 @@ class ClassTreeItemLeaf extends React.Component {
   render() {
     var klass = this.props.store;
     return (
-      <div className={"leaf"}>{klass.demodulized_name}</div>
+      <div className={"leaf"}><a href="#">{klass.demodulized_name}</a></div>
     );
   }
 }

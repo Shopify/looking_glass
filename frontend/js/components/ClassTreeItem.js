@@ -23,7 +23,12 @@ class ClassTreeItem extends React.Component {
     if (klass.nested_class_count > 0) {
       var nested = klass.nested_classes || [];
       return (
-        <TreeView onClick={this._handleClick} key={klass.id} nodeLabel={klass.demodulized_name} defaultCollapsed={true}>
+        <TreeView
+          onClick={this._handleClick}
+          key={klass.id}
+          nodeLabel={<a href="#">{klass.demodulized_name}</a>}
+          defaultCollapsed={true}
+        >
           <ClassTreeItemList store={nested} inspector={this.props.inspector} />
         </TreeView>
       );
