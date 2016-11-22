@@ -1,22 +1,8 @@
 import React from 'react';
 import Relay from 'react-relay';
-import hljs  from 'highlight.js';
+import Highlight from 'react-hljs';
 
 class MethodDetail extends React.Component {
-  componentDidMount() {
-    this.highlight()
-  }
-  componentDidUpdate() {
-    this.highlight()
-  }
-
-  highlight() {
-    console.log(this.codeElement);
-    if (this.codeElement) {
-      hljs.highlightBlock(this.codeElement);
-    }
-  }
-
   render() {
     var method = this.props.store;
     if (method) {
@@ -26,10 +12,10 @@ class MethodDetail extends React.Component {
           <h3>Defined at {method.file}:{method.line}</h3>
           <hr />
           <h2>Source</h2>
-          <pre><code ref={(code) => this.codeElement = code} className={"ruby"}>
+          <Highlight key={method.id} className='ruby'>
             {method.comment}
             {method.source}
-          </code></pre>
+          </Highlight>
           <h2>Bytecode Disassembly</h2>
           <pre><code className={"hljs"}>{method.bytecode}</code></pre>
           <h2>AST</h2>
@@ -48,6 +34,7 @@ export default Relay.createContainer(MethodDetail, {
   fragments: {
     store: () => Relay.QL`
       fragment on Method {
+        id,
         name,
         defining_class { name }
         file,

@@ -40,8 +40,10 @@ export default Relay.createContainer(ClassDetail, {
         name,
         demodulized_name,
         ancestors {
+          id,
           name,
           methods {
+            id,
             name,
             visibility,
           }
