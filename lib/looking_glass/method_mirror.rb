@@ -1,5 +1,7 @@
 require 'method_source'
 require 'base64'
+require 'ripper'
+require 'pp'
 
 module LookingGlass
   # A MethodMirror should reflect on methods, but in a more general
@@ -95,11 +97,18 @@ module LookingGlass
       visibility?(:private)
     end
 
-    # @return [String] The source code of this method
+    # @return [String,nil] The source code of this method
     def source
-      @subject.send(:source)
+      unindent(@subject.send(:source))
     rescue MethodSource::SourceNotFoundError
-      "(source not available)"
+      nil
+    end
+
+    # @return [String,nil] The pre-definition comment of this method
+    def comment
+      @subject.send(:comment)
+    rescue MethodSource::SourceNotFoundError
+      nil
     end
 
     # Returns the disassembled code if available.
@@ -108,6 +117,14 @@ module LookingGlass
     def bytecode
       iseq = RubyVM::InstructionSequence.of(@subject)
       iseq ? iseq.disasm : nil
+    end
+
+    # Returns the parse tree if available
+    #
+    # @return [String, nil] prettified AST
+    def sexp
+      src = source
+      src ? Ripper.sexp(src).pretty_inspect : nil
     end
 
     # Returns the compiled code if available.
@@ -136,6 +153,27 @@ module LookingGlass
 
     def source_location
       @subject.send(:source_location)
+    end
+
+    def unindent(str)
+      lines = str.split("\n")
+      return str if lines.empty?
+
+      indents = lines.map do |line|
+        if line =~ /\S/
+          line.start_with?(" ") ? line.match(/^ +/).offset(0)[1] : 0
+        end
+      end
+      indents.compact!
+
+      if indents.empty?
+        # No lines had any non-whitespace characters.
+        return ([""] * lines.size).join "\n"
+      end
+
+      min_indent = indents.min
+      return str if min_indent.zero?
+      lines.map { |line| line =~ /\S/ ? line.gsub(/^ {#{min_indent}}/, "") : line }.join("\n")
     end
   end
 end

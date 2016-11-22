@@ -9,15 +9,20 @@ class ClassDetail extends React.Component {
         <div>
           <h1>{klass.name}</h1>
           <hr />
-          <ul className={"methods"}>
-            {klass.methods.map(method => (
-              <li className={method.visibility}>
-                <a onClick={() => this.props.controller.setFocusMethod(method)} href="#">
-                  {method.name}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {klass.ancestors.map(anc => (
+            <div key={anc.id}>
+              <h2 className={"ancestor"}>Defined on <span className={"module"}>{anc.name}</span></h2>
+              <ul className={"methods"}>
+                {anc.methods.map(method => (
+                  <li key={method.id} className={method.visibility}>
+                    <a onClick={() => this.props.controller.setFocusMethod(method)} href="#">
+                      {method.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       );
     } else {
@@ -34,9 +39,12 @@ export default Relay.createContainer(ClassDetail, {
       fragment on Class {
         name,
         demodulized_name,
-        methods {
+        ancestors {
           name,
-          visibility,
+          methods {
+            name,
+            visibility,
+          }
         }
       }
     `,

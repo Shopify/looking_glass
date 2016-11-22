@@ -28,9 +28,11 @@ module LookingGlass
       # field :protected?
       # field :public?
       # field :private?
+      field :comment,              types.String
       field :source,               types.String
       field :native_code,          types.String
       field :bytecode,             types.String
+      field :sexp,                 types.String
     end
   end
 end
