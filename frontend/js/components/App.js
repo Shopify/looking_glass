@@ -4,26 +4,32 @@ import SplitPane from 'react-split-pane';
 
 import ClassTreeItemList from './ClassTreeItemList';
 import ClassDetail from './ClassDetail';
+import MethodDetail from './MethodDetail';
 
 class App extends React.Component {
   controller = {
     setFocusModule: (obj) => {
-      console.log('neat');
-      this.props.relay.setVariables({focusModule: obj});
+      this.props.relay.setVariables({
+        focusMethod: null,
+        focusModule: obj,
+      });
     },
-    setFocusObject: (obj) => {
-      this.props.relay.setVariables({focusObj: obj});
+    setFocusMethod: (obj) => {
+      this.props.relay.setVariables({focusMethod: obj});
     },
   }
 
   render() {
-    var {classes, class_detail} = this.props.store;
+    var {classes, class_detail, method_detail} = this.props.store;
     return (
       <SplitPane split="vertical" minSize={50} defaultSize={300}>
         <ClassTreeItemList
           store={classes}
           controller={this.controller} />
-        <ClassDetail store={class_detail} />
+        <SplitPane split="vertical" minSize={50} defaultSize={300}>
+          <ClassDetail controller={this.controller} store={class_detail} />
+          <MethodDetail controller={this.controller} store={method_detail} />
+        </SplitPane>
       </SplitPane>
     );
   }
@@ -32,15 +38,15 @@ class App extends React.Component {
 export default Relay.createContainer(App, {
   initialVariables: {
     focusModule: null,
-    focusObj: null,
+    focusMethod: null,
     methodId: "-1",
     classId: "-1",
   },
 
   prepareVariables: (prevVariables) => {
     var oid = "-1";
-    if (prevVariables.focusObj !== null) {
-      oid = prevVariables.focusObj.__dataID__.toString();
+    if (prevVariables.focusMethod !== null) {
+      oid = prevVariables.focusMethod.__dataID__.toString();
     }
     var mid = "-1";
     if (prevVariables.focusModule !== null) {
@@ -61,6 +67,9 @@ export default Relay.createContainer(App, {
         }
         class_detail(id: $classId) {
           ${ClassDetail.getFragment('store')}
+        }
+        method_detail(id: $methodId) {
+          ${MethodDetail.getFragment('store')}
         }
       }
     `,

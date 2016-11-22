@@ -1,7 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 
-class Details extends React.Component {
+class MethodDetail extends React.Component {
   render() {
     var method = this.props.store;
     if (method) {
@@ -22,7 +22,7 @@ class Details extends React.Component {
   }
 }
 
-export default Relay.createContainer(Details, {
+export default Relay.createContainer(MethodDetail, {
   fragments: {
     store: () => Relay.QL`
       fragment on Method {

@@ -85,7 +85,7 @@ module LookingGlass
         end
       end
 
-      field :method do
+      field :method_detail do
         type MethodType
         argument :id, !types.ID
         resolve ->(_, args, _) do

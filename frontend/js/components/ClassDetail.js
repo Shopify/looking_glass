@@ -12,7 +12,7 @@ class ClassDetail extends React.Component {
           <ul className={"methods"}>
             {klass.methods.map(method => (
               <li className={method.visibility}>
-                <a href="#">
+                <a onClick={() => this.props.controller.setFocusMethod(method)} href="#">
                   {method.name}
                 </a>
               </li>

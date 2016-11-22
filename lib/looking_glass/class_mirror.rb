@@ -131,15 +131,21 @@ module LookingGlass
     #
     # @return [Array<MethodMirror>]
     def methods
-      names = @subject.instance_methods(false).collect(&:to_s)
+      pub_names  = @subject.public_instance_methods(false)
+      prot_names = @subject.protected_instance_methods(false)
+      priv_names = @subject.private_instance_methods(false)
 
-      mirrors = names.map do |name|
-        LookingGlass.reflect(@subject.instance_method(name))
+      mirrors = []
+      pub_names.sort.each do |n|
+        mirrors << LookingGlass.reflect(@subject.instance_method(n))
       end
-
-      mirrors.sort_by do |mirror|
-        [mirror.visibility, mirror.name]
+      prot_names.sort.each do |n|
+        mirrors << LookingGlass.reflect(@subject.instance_method(n))
       end
+      priv_names.sort.each do |n|
+        mirrors << LookingGlass.reflect(@subject.instance_method(n))
+      end
+      mirrors
     end
 
     # The instance method of this class or any of its superclasses
