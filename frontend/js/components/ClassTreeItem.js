@@ -24,13 +24,19 @@ class ClassTreeItem extends React.Component {
     return (
       <TreeView onClick={this._handleClick} key={klass.id} nodeLabel={klass.demodulized_name} defaultCollapsed={true}>
         <ClassTreeItemList store={nested} inspector={this.props.inspector} />
-        {methods.map(method => (
-          <MethodTreeItem store={method} key={method.id} inspector={this.props.inspector} />
-        ))}
       </TreeView>
     );
   }
 }
+
+        // {methods.map(method => (
+        //   <MethodTreeItem store={method} key={method.id} inspector={this.props.inspector} />
+        // ))}
+
+
+        // methods @include(if: $expanded) {
+        //   ${MethodTreeItem.getFragment('store')}
+        // }
 
 export default Relay.createContainer(ClassTreeItem, {
   initialVariables: {
@@ -39,13 +45,9 @@ export default Relay.createContainer(ClassTreeItem, {
   fragments: {
     store: () => Relay.QL`
       fragment on Class {
+        id,
         demodulized_name,
-        methods @include(if: $expanded) {
-          id,
-          ${MethodTreeItem.getFragment('store')}
-        }
         nested_classes @include(if: $expanded) {
-          id,
           ${ClassTreeItemList.getFragment('store')}
         }
       }

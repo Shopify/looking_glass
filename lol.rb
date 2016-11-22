@@ -41,6 +41,22 @@ module LookingGlass
           raise "unexpected id type: #{id}"
         end
       end
+
+      def self.resolve(object)
+        return ViewerType if object == Viewer
+        case object
+        when Viewer
+          ViewerType
+        when ClassMirror
+          ClassType
+        when MethodMirror
+          MethodType
+        when FieldMirror
+          FieldType
+        else
+          raise "unexpected type: #{object.inspect}"
+        end
+      end
     end
 
     class Viewer
@@ -104,30 +120,9 @@ module LookingGlass
 
     Schema = GraphQL::Schema.define do
       query QueryType
-
-      resolve_type ->(object, _ctx) do
-        return ViewerType if object == Viewer
-        case object
-        when Viewer
-          ViewerType
-        when ClassMirror
-          ClassType
-        when MethodMirror
-          MethodType
-        when FieldMirror
-          FieldType
-        else
-          raise "unexpected type: #{object.inspect}"
-        end
-      end
-
-      id_from_object ->(object, _type_definition, _query_ctx) do
-        IDGen.obj2id(object)
-      end
-
-      object_from_id ->(id, _query_ctx) do
-        IDGen.id2obj(id)
-      end
+      resolve_type ->(object, _ctx) { IDGen.resolve(object) }
+      id_from_object ->(object, _type_definition, _query_ctx) { IDGen.obj2id(object) }
+      object_from_id ->(id, _query_ctx) { IDGen.id2obj(id) }
     end
   end
 end

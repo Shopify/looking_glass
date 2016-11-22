@@ -28,6 +28,7 @@ export default Relay.createContainer(MethodTreeItem, {
   fragments: {
     store: () => Relay.QL`
       fragment on Method {
+        id,
         name,
         visibility,
       }

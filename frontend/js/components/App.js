@@ -30,14 +30,10 @@ export default Relay.createContainer(App, {
   },
 
   prepareVariables: (prevVariables) => {
-
     var id = "-1";
     if (prevVariables.focusObj !== null) {
       id = prevVariables.focusObj.__dataID__.toString();
     }
-
-    console.log(id);
-
     return {
       ...prevVariables,
       methodId: id,
