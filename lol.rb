@@ -77,6 +77,14 @@ module LookingGlass
 
       field :classes, types[ClassType]
 
+      field :class_detail do
+        type ClassType
+        argument :id, !types.ID
+        resolve ->(_, args, _) do
+          IDGen.id2obj(args[:id])
+        end
+      end
+
       field :method do
         type MethodType
         argument :id, !types.ID

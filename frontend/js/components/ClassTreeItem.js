@@ -26,15 +26,19 @@ class ClassTreeItem extends React.Component {
         <TreeView
           onClick={this._handleClick}
           key={klass.id}
-          nodeLabel={<a href="#">{klass.demodulized_name}</a>}
+          nodeLabel={
+            <a onClick={() => this.props.controller.setFocusModule(klass)} className="module-type" href="#">
+              {klass.demodulized_name}
+            </a>
+          }
           defaultCollapsed={true}
         >
-          <ClassTreeItemList store={nested} inspector={this.props.inspector} />
+          <ClassTreeItemList store={nested} controller={this.props.controller} />
         </TreeView>
       );
     } else {
       return (
-        <ClassTreeItemLeaf store={klass} inspector={this.props.inspector} />
+        <ClassTreeItemLeaf store={klass} controller={this.props.controller} />
       );
     }
   }
@@ -43,7 +47,7 @@ class ClassTreeItem extends React.Component {
 // var methods = klass.methods || [];
 //
 // {methods.map(method => (
-//   <MethodTreeItem store={method} key={method.id} inspector={this.props.inspector} />
+//   <MethodTreeItem store={method} key={method.id} controller={this.props.controller} />
 // ))}
 
 // methods @include(if: $expanded) {

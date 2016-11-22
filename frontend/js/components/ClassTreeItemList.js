@@ -12,7 +12,7 @@ class ClassTreeItemList extends React.Component {
           <ClassTreeItem
             store={klass}
             key={klass.id}
-            inspector={this.props.inspector} />
+            controller={this.props.controller} />
         ))}
       </div>
     );

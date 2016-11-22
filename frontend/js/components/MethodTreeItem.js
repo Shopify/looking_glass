@@ -16,7 +16,7 @@ class MethodTreeItem extends React.Component {
     var method = this.props.store;
       return (
         <div>
-          <a href="#" onClick={() => this.props.inspector(method)}>
+          <a href="#" onClick={() => this.props.controller.setFocusObject(method)}>
             {this._visibilityGlyph(method)} {method.name}
           </a>
         </div>
