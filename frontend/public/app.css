@@ -136,8 +136,8 @@ h1 {
 
 h2.ancestor {
   display: block;
-  background: #ccc;
-  border-bottom: 1px solid #999;
+  background: #eee;
+  border-bottom: 1px solid #ddd;
   line-height: 1.5em;
 }
 
@@ -173,7 +173,7 @@ ul.methods li:before {
 
 ul.methods .public:before {
   content: '+';
-  color: green;
+  color: #3db31c;
 }
 
 ul.methods .protected:before {
@@ -183,7 +183,7 @@ ul.methods .protected:before {
 
 ul.methods .private:before {
   content: '-';
-  color: red;
+  color: #f15353;
 }
 
 .Resizer {

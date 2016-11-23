@@ -24,7 +24,8 @@ class MethodDetail extends React.Component {
       );
     } else {
       return (
-        <p className="inset pane-content">Click something to get started</p>
+        <div />
+        // <p className="inset pane-content">Click something to get started</p>
       );
     }
   }
