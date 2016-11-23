@@ -97,6 +97,17 @@ module LookingGlass
       visibility?(:private)
     end
 
+    UNBOUND_ALLOC = Class.method(:allocate).unbind
+    def super_method
+      owner = @subject.send(:owner)
+      return nil unless owner
+      bound_alloc = UNBOUND_ALLOC.bind(owner)
+      instance = bound_alloc.call
+      meth = @subject.bind(instance).super_method
+      return nil unless meth
+      LookingGlass.reflect(meth)
+    end
+
     # @return [String,nil] The source code of this method
     def source
       unindent(@subject.send(:source))

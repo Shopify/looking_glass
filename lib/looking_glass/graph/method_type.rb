@@ -28,6 +28,7 @@ module LookingGlass
       # field :protected?
       # field :public?
       # field :private?
+      field :super_method,    -> { MethodType }
       field :comment,              types.String
       field :source,               types.String
       field :native_code,          types.String
