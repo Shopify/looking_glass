@@ -86,24 +86,22 @@ a:hover {
 }
 
 .module-type:before, .class-type:before {
-  content: ' ';
-  position: relative;
-  top: 1px;
-  background-size: 11px 11px;
   width: 11px;
   height: 11px;
   display: inline-block;
   margin-right: 4px;
+  font-weight: 900;
+  text-align: center;
 }
 
 .module-type:before {
-  background: url('/module.png');
-  background-size: 11px 11px;
+  content: 'M';
+  color: rgba(0, 0, 255, 0.5);
 }
 
 .class-type:before {
-  background: url('/class.png');
-  background-size: 11px 11px;
+  content: 'C';
+  color: rgba(0, 150, 0, 0.5);
 }
 
 .tree-view_item, .leaf {
@@ -175,23 +173,28 @@ ul.methods li {
 }
 
 ul.methods li:before {
-  font-weight: bold;
+  font-weight: 900;
+  font-size: 16px;
+  width: 11px;
+  height: 11px;
+  display: inline-block;
+  text-align: center;
   margin-right: 4px;
 }
 
 ul.methods .public:before {
   content: '+';
-  color: #3db31c;
+  color: rgba(0, 150, 0, 0.5);
 }
 
 ul.methods .protected:before {
   content: '#';
-  color: orange;
+  color: rgba(255, 165, 0, 0.5);
 }
 
 ul.methods .private:before {
   content: '-';
-  color: #f15353;
+  color: rgba(255, 0, 0, 0.5);
 }
 
 .Resizer {
