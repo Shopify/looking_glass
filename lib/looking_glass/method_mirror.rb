@@ -100,12 +100,16 @@ module LookingGlass
     UNBOUND_ALLOC = Class.method(:allocate).unbind
     def super_method
       owner = @subject.send(:owner)
-      return nil unless owner
-      bound_alloc = UNBOUND_ALLOC.bind(owner)
-      instance = bound_alloc.call
-      meth = @subject.bind(instance).super_method
-      return nil unless meth
-      LookingGlass.reflect(meth)
+
+      if owner.is_a?(Class)
+        bound_alloc = UNBOUND_ALLOC.bind(owner)
+        instance = bound_alloc.call
+        meth = @subject.bind(instance).super_method.unbind
+      else
+        meth = @subject.bind(owner).super_method.unbind
+      end
+
+      meth ? LookingGlass.reflect(meth) : nil
     end
 
     # @return [String,nil] The source code of this method
