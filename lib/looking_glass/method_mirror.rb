@@ -2,6 +2,8 @@ require 'method_source'
 require 'base64'
 require 'ripper'
 require 'pp'
+require 'looking_glass/iseq_visitor'
+require 'looking_glass/references_visitor'
 
 module LookingGlass
   # A MethodMirror should reflect on methods, but in a more general
@@ -152,6 +154,10 @@ module LookingGlass
 
     def name
       @subject.name
+    end
+
+    def references_visitor
+      LookingGlass::ReferencesVisitor.new.call(self)
     end
 
     private

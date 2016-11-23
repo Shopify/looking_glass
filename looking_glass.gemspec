@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_development_dependency 'minitest',      '~> 5.0'
+  s.add_development_dependency 'byebug',      '~> 9.0.6'
 
   s.add_runtime_dependency     'method_source', '~> 0.8'
   s.add_runtime_dependency     'graphql',       '~> 1.2'

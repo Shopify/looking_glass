@@ -33,7 +33,7 @@ module LookingGlass
   #
   # @return [Array<ClassMirror>] a list of class mirrors
   def classes
-    instances_of(Class)
+    instances_of(Class).sort! { |a,b| a.name <=> b.name }
   end
 
   # Query the system for objects that are direct instances of the
