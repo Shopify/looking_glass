@@ -58,11 +58,6 @@ a {
   text-decoration: none;
 }
 
-a:hover,
-.leaf:hover a {
-  color: rgb(118, 127, 136);
-}
-
 .Pane {
   overflow-y: scroll;
 }
@@ -185,7 +180,7 @@ ul.methods li {
   top: 0;
   right: 0;
   bottom: 0;
-  margin: -2px 0 2px -10000px;
+  margin: -2px -1000px 2px -10000px;
   z-index: -1;
 }
 
@@ -193,8 +188,15 @@ ul.methods li {
   background-color: #0063cd;
 }
 
+.selection + li {
+  cursor: pointer;
+  user-select: none;
+}
+
 .selected + a,
-.selected + a:before {
+.selected + li a,
+.selected + *:before,
+.selected + *:after {
   color: white !important;
 }
 

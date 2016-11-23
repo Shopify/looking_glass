@@ -1,10 +1,12 @@
 import React from 'react';
 import Relay from 'react-relay';
 import TreeView from 'react-treeview';
+import MethodListItem from './MethodListItem'
 
 class ClassDetail extends React.Component {
   render() {
     var klass = this.props.store;
+
     if (klass) {
       return (
         <div className="class-detail pane-content">
@@ -20,11 +22,7 @@ class ClassDetail extends React.Component {
               >
                 <ul className="methods inset">
                   {anc.methods.map(method => (
-                    <li key={method.id} className={method.visibility}>
-                      <a onClick={() => this.props.controller.setFocusMethod(method)} href="#">
-                        {method.name}
-                      </a>
-                    </li>
+                    <MethodListItem key={method.id} store={method} controller={this.props.controller} />
                   ))}
                 </ul>
               </TreeView>
@@ -53,8 +51,7 @@ export default Relay.createContainer(ClassDetail, {
           name,
           methods {
             id,
-            name,
-            visibility,
+            ${MethodListItem.getFragment('store')},
           }
         }
       }

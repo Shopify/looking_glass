@@ -12,9 +12,22 @@ class App extends React.Component {
       this.props.relay.setVariables({focusMethod: obj});
     },
 
-    setActiveClassTreeItem: (component) => {
-      console.log("neato");
+    setActiveMethod: (component) => {
+      let prevMethod = this.state.selectedMethod;
+      if (prevMethod) {
+        prevMethod.setState({selected: false});
+      }
+      component.setState({selected: true});
 
+      this.props.relay.setVariables({
+        focusMethod: component.props.store,
+      });
+      this.setState({
+        selectedMethod: component,
+      })
+    },
+
+    setActiveClassTreeItem: (component) => {
       let prevClass = this.state.selectedClass;
       if (prevClass) {
         prevClass.setState({selected: false});
@@ -34,7 +47,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedClass: null,
+      selectedClass:  null,
+      selectedMethod: null,
     };
   }
 
