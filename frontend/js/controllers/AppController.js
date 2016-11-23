@@ -3,50 +3,36 @@ export default class AppController {
     this.app = app;
   }
 
-  setFocusMethod(obj) {
-    this._setRelayVariables({focusMethod: obj});
-  }
-
   setActiveMethod(component) {
-    let prevMethod = this._getState("selectedMethod");
-    if (prevMethod) {
-      prevMethod.setState({selected: false});
+    if (this.selectedMethod) {
+      this.selectedMethod.setState({selected: false});
     }
     component.setState({selected: true});
+    this.selectedMethod = component;
 
     this._setRelayVariables({
-      focusMethod: component.props.store,
+      methodId: this._dataID(component.props.store),
     });
-    this._setState({
-      selectedMethod: component,
-    })
   }
 
   setActiveClassTreeItem(component) {
-    let prevClass = this._getState("selectedClass");
-    if (prevClass) {
-      prevClass.setState({selected: false});
+    if (this.selectedClass) {
+      this.selectedClass.setState({selected: false});
     }
     component.setState({selected: true});
+    this.selectedClass = component;
 
     this._setRelayVariables({
-      focusMethod: null,
-      focusModule: component.props.store,
+      methodId: "-1",
+      classId: this._dataID(component.props.store),
     });
-    this._setState({
-      selectedClass: component,
-    });
+  }
+
+  _dataID(obj) {
+    return obj === null ? "-1" : obj.__dataID__.toString();
   }
 
   _setRelayVariables(vars) {
     return this.app.props.relay.setVariables(vars);
-  }
-
-  _getState(k) {
-    return this.app.state[k];
-  }
-
-  _setState(state) {
-    return this.app.setState(state);
   }
 }

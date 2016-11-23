@@ -11,12 +11,6 @@ import AppController from '../controllers/AppController'
 class App extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedClass:  null,
-      selectedMethod: null,
-    };
-
     this.controller = new AppController(this);
   }
 
@@ -36,26 +30,8 @@ class App extends React.Component {
 
 export default Relay.createContainer(App, {
   initialVariables: {
-    focusModule: null,
-    focusMethod: null,
     methodId: "-1",
     classId: "-1",
-  },
-
-  prepareVariables: (prevVariables) => {
-    var oid = "-1";
-    if (prevVariables.focusMethod !== null) {
-      oid = prevVariables.focusMethod.__dataID__.toString();
-    }
-    var mid = "-1";
-    if (prevVariables.focusModule !== null) {
-      mid = prevVariables.focusModule.__dataID__.toString();
-    }
-    return {
-      ...prevVariables,
-      methodId: oid,
-      classId: mid,
-    };
   },
 
   fragments: {
