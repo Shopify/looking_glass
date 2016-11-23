@@ -46,6 +46,7 @@ export default Relay.createContainer(ClassDetail, {
     store: () => Relay.QL`
       fragment on Class {
         name,
+        is_class,
         demodulized_name,
         ancestors {
           id,

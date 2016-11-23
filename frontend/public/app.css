@@ -172,7 +172,8 @@ ul.methods li {
   min-height: 20px;
 }
 
-ul.methods li:before {
+ul.methods li:before,
+ul.methods li:after {
   font-weight: 900;
   font-size: 16px;
   width: 11px;
@@ -182,9 +183,23 @@ ul.methods li:before {
   margin-right: 4px;
 }
 
+ul.methods li {
+  position: relative;
+}
+
 ul.methods .public:before {
   content: '+';
   color: rgba(0, 150, 0, 0.5);
+}
+
+ul.methods .static:after {
+  position: absolute;
+  left: -3px;
+  top: 2px;
+  content: 's';
+  font-size: 11px;
+  font-weight: normal;
+  color: rgba(70, 70, 150, 1);
 }
 
 ul.methods .protected:before {
