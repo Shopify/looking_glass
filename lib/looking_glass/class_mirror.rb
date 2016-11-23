@@ -4,6 +4,10 @@ module LookingGlass
   class ClassMirror < ObjectMirror
     reflect!(Module)
 
+    def is_class
+      @subject.is_a?(Class)
+    end
+
     # The known class variables.
     # @see #instance_variables
     # @return [Array<FieldMirror>]

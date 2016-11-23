@@ -22,12 +22,13 @@ class ClassTreeItem extends React.Component {
     var klass = this.props.store;
     if (klass.nested_class_count > 0) {
       var nested = klass.nested_classes || [];
+      let type = klass.is_class ? "class-type" : "module-type";
       return (
         <TreeView
           onClick={this._handleClick}
           key={klass.id}
           nodeLabel={
-            <a onClick={() => this.props.controller.setFocusModule(klass)} className="module-type" href="#">
+            <a onClick={() => this.props.controller.setFocusModule(klass)} className={type} href="#">
               {klass.demodulized_name}
             </a>
           }
@@ -62,6 +63,7 @@ export default Relay.createContainer(ClassTreeItem, {
     store: () => Relay.QL`
       fragment on Class {
         id,
+        is_class,
         demodulized_name,
         ${ClassTreeItemLeaf.getFragment('store')}
         nested_class_count,

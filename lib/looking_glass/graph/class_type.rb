@@ -20,6 +20,7 @@ module LookingGlass
       field :target_class, -> { !ClassType }
 
       # ClassMirror
+      field :is_class,                 !types.Boolean
       field :demodulized_name,         !types.String
       field :class_variables,          !types[FieldType]
       field :class_instance_variables, !types[FieldType]
