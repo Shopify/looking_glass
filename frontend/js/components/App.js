@@ -8,15 +8,34 @@ import MethodDetail from './MethodDetail';
 
 class App extends React.Component {
   controller = {
-    setFocusModule: (obj) => {
-      this.props.relay.setVariables({
-        focusMethod: null,
-        focusModule: obj,
-      });
-    },
     setFocusMethod: (obj) => {
       this.props.relay.setVariables({focusMethod: obj});
     },
+
+    setActiveClassTreeItem: (component) => {
+      console.log("neato");
+
+      let prevClass = this.state.selectedClass;
+      if (prevClass) {
+        prevClass.setState({selected: false});
+      }
+      component.setState({selected: true});
+
+      this.props.relay.setVariables({
+        focusMethod: null,
+        focusModule: component.props.store,
+      });
+      this.setState({
+        selectedClass: component,
+      });
+    },
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedClass: null,
+    };
   }
 
   render() {

@@ -1,6 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
 import TreeView from 'react-treeview';
+import classNames from 'classnames';
 import MethodTreeItem from './MethodTreeItem';
 import ClassTreeItemList from './ClassTreeItemList';
 import ClassTreeItemLeaf from './ClassTreeItemLeaf';
@@ -13,13 +14,37 @@ import ClassTreeItemLeaf from './ClassTreeItemLeaf';
 
 class ClassTreeItem extends React.Component {
   _handleClick = () => {
+    console.log( "hc" );
     this.props.relay.setVariables({
       expanded: true,
     });
+    return false;
+  }
+
+  _setSelected = (evt) => {
+    console.log( "setsel" );
+    // I thought we could just stop event propagation but it doesn't seem to be
+    // working...
+    if (evt.target.classList.contains('tree-view_arrow')) {
+      return;
+    }
+    this.props.controller.setActiveClassTreeItem(this);
+    return false;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {selected: false};
   }
 
   render() {
     var klass = this.props.store;
+
+    let divClasses = classNames({
+      selection: true,
+      selected:  this.state.selected,
+    });
+
     if (klass.nested_class_count > 0) {
       var nested = klass.nested_classes || [];
       let type = klass.is_class ? "class-type" : "module-type";
@@ -28,9 +53,12 @@ class ClassTreeItem extends React.Component {
           onClick={this._handleClick}
           key={klass.id}
           nodeLabel={
-            <a onClick={() => this.props.controller.setFocusModule(klass)} className={type} href="#">
-              {klass.demodulized_name}
-            </a>
+            <span onClick={this._setSelected}>
+              <div className={divClasses}></div>
+              <a className={type} href="#">
+                {klass.demodulized_name}
+              </a>
+            </span>
           }
           defaultCollapsed={true}
         >
@@ -39,21 +67,16 @@ class ClassTreeItem extends React.Component {
       );
     } else {
       return (
-        <ClassTreeItemLeaf store={klass} controller={this.props.controller} />
+        <ClassTreeItemLeaf
+          selected={this.state.selected}
+          select={this._setSelected}
+          store={klass}
+          controller={this.props.controller}
+        />
       );
     }
   }
 }
-
-// var methods = klass.methods || [];
-//
-// {methods.map(method => (
-//   <MethodTreeItem store={method} key={method.id} controller={this.props.controller} />
-// ))}
-
-// methods @include(if: $expanded) {
-//   ${MethodTreeItem.getFragment('store')}
-// }
 
 export default Relay.createContainer(ClassTreeItem, {
   initialVariables: {

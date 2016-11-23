@@ -33,7 +33,3 @@ export default Relay.createContainer(ClassTreeItemList, {
     `,
   }
 });
-
-//         methods @include(if: $mounted) {
-//           ${MethodTreeItem.getFragment('store')}
-//         }

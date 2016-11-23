@@ -1,15 +1,25 @@
 import React from 'react';
 import Relay from 'react-relay';
+import classNames from 'classnames';
 
 class ClassTreeItemLeaf extends React.Component {
   render() {
     var klass = this.props.store;
-    let type = klass.is_class ? "class-type" : "module-type";
+
+    let aClasses = classNames({
+      "class-type":  klass.is_class,
+      "module-type": !klass.is_class,
+    })
+
+    let selClasses = classNames({
+      selection: true,
+      selected:  this.props.selected,
+    });
+
     return (
-      <div className={"leaf"}>
-        <a onClick={() => this.props.controller.setFocusModule(klass)} className={type} href="#">
-          {klass.demodulized_name}
-        </a>
+      <div onClick={this.props.select} className={"leaf"}>
+        <div className={selClasses}></div>
+        <a className={aClasses} href="#">{klass.demodulized_name}</a>
       </div>
     );
   }
