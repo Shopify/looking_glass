@@ -172,6 +172,10 @@ ul.methods li {
   min-height: 20px;
 }
 
+.tree-view_arrow > a {
+  display: block;
+}
+
 ul.methods li:before,
 ul.methods li:after {
   font-weight: 900;
