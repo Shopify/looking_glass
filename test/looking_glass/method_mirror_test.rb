@@ -52,15 +52,6 @@ module LookingGlass
       assert_equal(:private, m.visibility)
     end
 
-    def test_delete_method
-      skip "undefined method `delete' for <LookingGlass::MethodMirror>"
-      c = MethodSpecFixture
-      m = LookingGlass.reflect(c.instance_method(:removeable_method))
-      assert_includes(c.instance_methods(false).map(&:to_s), "removeable_method")
-      m.delete
-      refute_includes(c.instance_methods(false).map(&:to_s), "removeable_method")
-    end
-
     private
 
     def method_b(a, b = 1, bb = 2, *args, &block)
