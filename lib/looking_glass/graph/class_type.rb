@@ -17,26 +17,26 @@ module LookingGlass
 
       # ObjectMirror
       field :variables,    !types[FieldType]
-      field :target_class, -> { !ClassType }
+      field :targetClass,  -> { !ClassType }, property: :target_class
 
       # ClassMirror
-      field :is_class,                 !types.Boolean
-      field :demodulized_name,         !types.String
-      field :class_variables,          !types[FieldType]
-      field :class_instance_variables, !types[FieldType]
-      field :source_files,             !types[!types.String]
-      field :singleton_class,     -> { !ClassType }
-      field :is_singleton_class,       !types.Boolean
-      field :mixins,              -> { !types[ClassType] }
-      field :superclass,          -> {  ClassType }
-      field :subclasses,          -> { !types[ClassType] }
-      field :ancestors,           -> { !types[ClassType] }
-      field :constants,                !types[FieldType]
+      field :isClass,                !types.Boolean,        property: :is_class
+      field :demodulizedName,        !types.String,         property: :demodulized_name
+      field :classVariables,         !types[FieldType],     property: :class_variables
+      field :classInstanceVariables, !types[FieldType],     property: :class_instance_variables
+      field :sourceFiles,            !types[!types.String], property: :source_files
+      field :singletonClass,    -> { !ClassType },          property: :singleton_class
+      field :isSingletonClass,       !types.Boolean,        property: :is_singleton_class
+      field :mixins,            -> { !types[ClassType] }
+      field :superclass,        -> {  ClassType }
+      field :subclasses,        -> { !types[ClassType] }
+      field :ancestors,         -> { !types[ClassType] }
+      field :constants,              !types[FieldType]
       # field :constant(str)
-      field :nesting,             -> { !types[ClassType] }
-      field :nested_classes,      -> { !types[ClassType] }
-      field :nested_class_count,       !types.Int
-      field :methods,                  !types[MethodType]
+      field :nesting,           -> { !types[ClassType] }
+      field :nestedClasses,     -> { !types[ClassType] },   property: :nested_classes
+      field :nestedClassCount,       !types.Int,            property: :nested_class_count
+      field :methods,                !types[MethodType]
       # field :method(name)
     end
   end

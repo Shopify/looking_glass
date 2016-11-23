@@ -8,7 +8,7 @@ class MethodDetail extends React.Component {
     if (method) {
       return (
         <div className="pane-content">
-          <h1 className="inset">{method.defining_class.name}#{method.name}</h1>
+          <h1 className="inset">{method.definingClass.name}#{method.name}</h1>
           <h3 className="inset">Defined at {method.file}:{method.line}</h3>
           <hr />
           <h2 className="inset">Source</h2>
@@ -37,7 +37,7 @@ export default Relay.createContainer(MethodDetail, {
       fragment on Method {
         id,
         name,
-        defining_class { name }
+        definingClass { name }
         file,
         line,
         source,

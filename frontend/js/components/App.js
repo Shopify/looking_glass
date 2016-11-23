@@ -15,13 +15,13 @@ class App extends React.Component {
   }
 
   render() {
-    var {classes, class_detail, method_detail} = this.props.store;
+    var {classes, classDetail, methodDetail} = this.props.store;
     return (
       <SplitPane split="vertical" minSize={50} defaultSize={300}>
         <ClassTreePane store={classes} controller={this.controller} />
         <SplitPane split="vertical" minSize={50} defaultSize={300}>
-          <ClassDetailPane store={class_detail} controller={this.controller} />
-          <MethodDetailPane store={method_detail} controller={this.controller} />
+          <ClassDetailPane store={classDetail} controller={this.controller} />
+          <MethodDetailPane store={methodDetail} controller={this.controller} />
         </SplitPane>
       </SplitPane>
     );
@@ -40,10 +40,10 @@ export default Relay.createContainer(App, {
         classes {
           ${ClassTreePane.getFragment('store')}
         }
-        class_detail(id: $classId) {
+        classDetail(id: $classId) {
           ${ClassDetailPane.getFragment('store')}
         }
-        method_detail(id: $methodId) {
+        methodDetail(id: $methodId) {
           ${MethodDetailPane.getFragment('store')}
         }
       }

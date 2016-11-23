@@ -18,20 +18,20 @@ module LookingGlass
       field :file,                 types.String
       field :line,                 types.Int
       field :selector,            !types.String
-      field :defining_class, -> { !ClassType }
-      field :block_argument,       FieldType
-      field :splat_argument,       FieldType
-      field :optional_arguments,   types[FieldType]
-      field :required_arguments,   types[FieldType]
+      field :definingClass,  -> { !ClassType },      property: :defining_class
+      field :blockArgument,        FieldType,        property: :block_argument
+      field :splatArgument,        FieldType,        property: :splat_argument
+      field :optionalArguments,    types[FieldType], property: :optional_arguments
+      field :requiredArguments,    types[FieldType], property: :required_arguments
       field :arguments,           !types[FieldType]
       field :visibility,          !types.String
       # field :protected?
       # field :public?
       # field :private?
-      field :super_method,    -> { MethodType }
+      field :superMethod,     -> { MethodType },     property: :super_method
       field :comment,              types.String
       field :source,               types.String
-      field :native_code,          types.String
+      field :native_code,          types.String,     property: :native_code
       field :bytecode,             types.String
       field :sexp,                 types.String
     end

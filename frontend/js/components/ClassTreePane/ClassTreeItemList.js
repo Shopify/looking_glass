@@ -24,10 +24,6 @@ export default Relay.createContainer(ClassTreeItemList, {
     store: () => Relay.QL`
       fragment on Class @relay(plural: true) {
         id,
-        demodulized_name,
-        nested_classes {
-          ${ClassTreeItem.getFragment('store')}
-        }
         ${ClassTreeItem.getFragment('store')}
       }
     `,

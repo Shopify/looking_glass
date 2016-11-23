@@ -77,7 +77,7 @@ module LookingGlass
 
       field :classes, types[ClassType]
 
-      field :class_detail do
+      field :classDetail do
         type ClassType
         argument :id, !types.ID
         resolve ->(_, args, _) do
@@ -85,7 +85,7 @@ module LookingGlass
         end
       end
 
-      field :method_detail do
+      field :methodDetail do
         type MethodType
         argument :id, !types.ID
         resolve ->(_, args, _) do

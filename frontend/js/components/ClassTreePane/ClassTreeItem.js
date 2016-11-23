@@ -45,9 +45,9 @@ class ClassTreeItem extends React.Component {
       selected:  this.state.selected,
     });
 
-    if (klass.nested_class_count > 0) {
-      var nested = klass.nested_classes || [];
-      let type = klass.is_class ? "class-type" : "module-type";
+    if (klass.nestedClassCount > 0) {
+      var nested = klass.nestedClasses || [];
+      let type = klass.isClass ? "class-type" : "module-type";
       return (
         <TreeView
           onClick={this._handleClick}
@@ -56,7 +56,7 @@ class ClassTreeItem extends React.Component {
             <span onClick={this._setSelected}>
               <div className={divClasses}></div>
               <a className={type} href="#">
-                {klass.demodulized_name}
+                {klass.demodulizedName}
               </a>
             </span>
           }
@@ -86,13 +86,13 @@ export default Relay.createContainer(ClassTreeItem, {
     store: () => Relay.QL`
       fragment on Class {
         id,
-        is_class,
-        demodulized_name,
+        isClass,
+        demodulizedName,
         ${ClassTreeItemLeaf.getFragment('store')}
-        nested_class_count,
-        nested_classes @include(if: $expanded) {
+        nestedClassCount,
+        nestedClasses @include(if: $expanded) {
           id,
-          demodulized_name,
+          demodulizedName,
           ${ClassTreeItemList.getFragment('store')}
         }
       }

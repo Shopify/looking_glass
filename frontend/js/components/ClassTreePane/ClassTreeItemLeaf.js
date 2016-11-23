@@ -7,8 +7,8 @@ class ClassTreeItemLeaf extends React.Component {
     var klass = this.props.store;
 
     let aClasses = classNames({
-      "class-type":  klass.is_class,
-      "module-type": !klass.is_class,
+      "class-type":  klass.isClass,
+      "module-type": !klass.isClass,
     })
 
     let selClasses = classNames({
@@ -19,7 +19,7 @@ class ClassTreeItemLeaf extends React.Component {
     return (
       <div onClick={this.props.select} className={"leaf"}>
         <div className={selClasses}></div>
-        <a className={aClasses} href="#">{klass.demodulized_name}</a>
+        <a className={aClasses} href="#">{klass.demodulizedName}</a>
       </div>
     );
   }
@@ -32,8 +32,8 @@ export default Relay.createContainer(ClassTreeItemLeaf, {
   fragments: {
     store: () => Relay.QL`
       fragment on Class {
-        is_class,
-        demodulized_name,
+        isClass,
+        demodulizedName,
       }
     `,
   }
