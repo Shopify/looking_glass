@@ -1,0 +1,239 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", sans-serif;
+  font-size: 12px;
+  color: rgb(48, 57, 66);
+  line-height: 1.3em;
+}
+
+code {
+  font-family: Monaco, courier, monospace;
+}
+
+a {
+  color: rgb(48, 57, 66);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(118, 127, 136);
+}
+
+.Pane {
+  overflow-y: scroll;
+}
+
+.pane-content {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.Pane .inset {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.hljs {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.tree-view {
+}
+
+.module-type:before, .class-type:before {
+  content: ' ';
+  position: relative;
+  top: 1px;
+  background-size: 11px 11px;
+  width: 11px;
+  height: 11px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.module-type:before {
+  background: url('/module.png');
+  background-size: 11px 11px;
+}
+
+.class-type:before {
+  background: url('/class.png');
+  background-size: 11px 11px;
+}
+
+.tree-view_item, .leaf {
+  min-height: 20px;
+  user-select: none;
+}
+
+.tree-view_children {
+  margin-left: 17px;
+}
+
+.tree-view_children-collapsed {
+  height: 0px;
+}
+
+.tree-view_arrow {
+  cursor: pointer;
+  margin-right: 6px;
+  width: 10px;
+  display: inline-block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+h1 {
+  font-size: 15px;
+  margin-bottom: 1em;
+}
+
+h2.ancestor {
+  display: block;
+  background: #ccc;
+  border-bottom: 1px solid #999;
+  line-height: 1.5em;
+}
+
+hr {
+  margin: 0 0 12px 0;
+  padding: 0;
+  border: none;
+  height: 1px;
+  background: #ccc;
+}
+
+.leaf {
+  margin-left: 16px;
+}
+
+.tree-view_arrow:after {
+  width: 10px;
+  content: url('/tree-view-arrow-open.png');
+}
+
+.tree-view_arrow-collapsed:after {
+  content: url('/tree-view-arrow.png');
+}
+
+ul.methods li {
+  min-height: 20px;
+}
+
+ul.methods li:before {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+ul.methods .public:before {
+  content: '+';
+  color: green;
+}
+
+ul.methods .protected:before {
+  content: '#';
+  color: orange;
+}
+
+ul.methods .private:before {
+  content: '-';
+  color: red;
+}
+
+.Resizer {
+  background: #000;
+  opacity: .2;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+}
+
+.Resizer:hover {
+  -webkit-transition: all 2s ease;
+  transition: all 2s ease;
+}
+
+.Resizer.horizontal {
+  height: 11px;
+  margin: -5px 0;
+  border-top: 5px solid rgba(255, 255, 255, 0);
+  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  cursor: row-resize;
+  width: 100%;
+}
+
+.Resizer.horizontal:hover {
+  border-top: 5px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+  width: 11px;
+  margin: 0 -5px;
+  border-left: 5px solid rgba(255, 255, 255, 0);
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+  border-left: 5px solid rgba(0, 0, 0, 0.5);
+  border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+Resizer.disabled {
+  cursor: not-allowed;
+}
+
+Resizer.disabled:hover {
+  border-color: transparent;
+}

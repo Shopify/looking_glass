@@ -24,6 +24,7 @@ class App extends React.Component {
     return (
       <SplitPane split="vertical" minSize={50} defaultSize={300}>
         <ClassTreeItemList
+          className="pane-content"
           store={classes}
           controller={this.controller} />
         <SplitPane split="vertical" minSize={50} defaultSize={300}>

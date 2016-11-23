@@ -7,7 +7,7 @@ class ClassTreeItemList extends React.Component {
   render() {
     var classes = this.props.store || [];
     return (
-      <div>
+      <div className={this.props.className}>
         {classes.map(klass => (
           <ClassTreeItem
             store={klass}
