@@ -14,7 +14,6 @@ import ClassTreeItemLeaf from './ClassTreeItemLeaf';
 
 class ClassTreeItem extends React.Component {
   _handleClick = () => {
-    console.log( "hc" );
     this.props.relay.setVariables({
       expanded: true,
     });

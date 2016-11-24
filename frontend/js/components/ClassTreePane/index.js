@@ -1,11 +1,11 @@
 import React from 'react';
 import Relay from 'react-relay';
-import ClassTreeItemList from './ClassTreeItemList'
+import PackageList from './PackageList'
 
 class ClassTreePane extends React.Component {
   render() {
     return (
-      <ClassTreeItemList
+      <PackageList
         className="pane-content"
         store={this.props.store}
         controller={this.props.controller} />
@@ -16,8 +16,8 @@ class ClassTreePane extends React.Component {
 export default Relay.createContainer(ClassTreePane, {
   fragments: {
     store: () => Relay.QL`
-      fragment on Class @relay(plural: true) {
-        ${ClassTreeItemList.getFragment('store')},
+      fragment on Package @relay(plural: true) {
+        ${PackageList.getFragment('store')},
       }
     `,
   }

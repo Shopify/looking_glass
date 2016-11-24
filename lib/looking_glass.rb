@@ -3,9 +3,22 @@ require 'looking_glass/object_mirror'
 require 'looking_glass/class_mirror'
 require 'looking_glass/field_mirror'
 require 'looking_glass/method_mirror'
+require 'looking_glass/package_mirror'
+require 'looking_glass/package_inference'
 
 module LookingGlass
   extend self
+
+  def packages
+    packages = {}
+    # Object is the top-level.
+    Object.constants.each do |const|
+      pkg = PackageInference.infer_from_toplevel(const)
+      packages[pkg] = true
+    end
+    toplevel_packages = packages.keys.map { |pkg| pkg.sub(/:.*/, '') }.sort
+    package_mirrors(toplevel_packages)
+  end
 
   # This method can be used to query the system for known modules. It
   # is not guaranteed that all possible modules are returned.
@@ -64,5 +77,9 @@ module LookingGlass
 
   def mirrors(list)
     list.map { |e| reflect(e) }
+  end
+
+  def package_mirrors(list)
+    list.map { |e| PackageMirror.reflect(e) }
   end
 end

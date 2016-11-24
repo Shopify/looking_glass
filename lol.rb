@@ -1,5 +1,8 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 
+require 'looking_glass/hooking_class'
+LookingGlass::HookingClass.apply(File.expand_path('../', __FILE__))
+
 require 'looking_glass/graph'
 require 'looking_glass/graph/server'
 
@@ -10,6 +13,8 @@ module LookingGlass
         case object
         when Viewer
           'v'
+        when PackageMirror
+          "p#{object.instance_variable_get(:@subject)}"
         when ClassMirror
           "c#{object.subject_id}"
         when MethodMirror
@@ -29,6 +34,8 @@ module LookingGlass
           Viewer.new
         when '-' # just wants empty result, usually '-1'
           return nil
+        when 'p'
+          PackageMirror.reflect(id[1..-1])
         when 'c' # class
           obj = ObjectSpace._id2ref(id[1..-1].to_i)
           obj ? LookingGlass.reflect(obj) : nil
@@ -47,6 +54,8 @@ module LookingGlass
         case object
         when Viewer
           ViewerType
+        when PackageMirror
+          PackageType
         when ClassMirror
           ClassType
         when MethodMirror
@@ -63,10 +72,15 @@ module LookingGlass
       def classes
         Object
           .constants
+          .sort
           .map { |name| Object.const_get(name) }
           .select { |const| const.is_a?(Module) } # class inherits Module
-          .map { |mod| LookingGlass.reflect(mod) }
           .sort_by(&:name)
+          .map { |mod| LookingGlass.reflect(mod) }
+      end
+
+      def packages
+        LookingGlass.packages
       end
     end
 
@@ -77,20 +91,21 @@ module LookingGlass
 
       field :classes, types[ClassType]
 
+      field :packages do
+        type types[PackageType]
+        resolve ->(_, _, _) { LookingGlass.packages }
+      end
+
       field :classDetail do
         type ClassType
         argument :id, !types.ID
-        resolve ->(_, args, _) do
-          IDGen.id2obj(args[:id])
-        end
+        resolve ->(_, args, _) { IDGen.id2obj(args[:id]) }
       end
 
       field :methodDetail do
         type MethodType
         argument :id, !types.ID
-        resolve ->(_, args, _) do
-          IDGen.id2obj(args[:id])
-        end
+        resolve ->(_, args, _) { IDGen.id2obj(args[:id]) }
       end
     end
 
@@ -102,27 +117,6 @@ module LookingGlass
       field(:viewer) do
         type ViewerType
         resolve ->(_, _, _) { Viewer.new }
-      end
-
-      field(:allClasses) do
-        type types[ClassType]
-        resolve ->(_, _, _) do
-          Object
-            .constants
-            .map { |name| Object.const_get(name) }
-            .select { |const| const.is_a?(Module) } # class inherits Module
-            .map { |mod| LookingGlass.reflect(mod) }
-        end
-      end
-
-      field(:class) do
-        type ClassType
-        argument :name, !types.String
-        resolve ->(_, args, _) do
-          LookingGlass.reflect(
-            Kernel.const_get(args[:name])
-          )
-        end
       end
     end
 

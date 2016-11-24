@@ -8,6 +8,10 @@ module LookingGlass
       @subject.is_a?(Class)
     end
 
+    def package
+      # TODO(burke)
+    end
+
     # The known class variables.
     # @see #instance_variables
     # @return [Array<FieldMirror>]
@@ -123,7 +127,7 @@ module LookingGlass
           @subject.const_get(c)
         end
       end
-      mirrors(nc.compact.select { |c| c.is_a?(Module) })
+      mirrors(nc.compact.select { |c| c.is_a?(Module) }.sort_by(&:name))
     end
 
     def nested_class_count
@@ -161,9 +165,13 @@ module LookingGlass
     end
 
     # to work around overridden `name` methods
-    MODULE_INSPECT = Module.method(:inspect).unbind
+    MODULE_INSPECT = Module.instance_method(:inspect)
     def name
       MODULE_INSPECT.bind(@subject).call
+    rescue
+      puts @subject.inspect
+      puts @subject.class
+      raise
     end
 
     def demodulized_name

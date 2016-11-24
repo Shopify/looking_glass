@@ -60,6 +60,7 @@ a {
 
 .Pane {
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .pane-content {
@@ -81,7 +82,7 @@ a {
 .tree-view {
 }
 
-.module-type:before, .class-type:before {
+.module-type:before, .class-type:before, .package-type:before {
   width: 11px;
   height: 11px;
   display: inline-block;
@@ -98,6 +99,15 @@ a {
 .class-type:before {
   content: 'C';
   color: rgba(0, 150, 0, 0.5);
+}
+
+.package-type {
+  font-weight: bold;
+}
+
+.package-type:before {
+  content: 'P';
+  color: rgba(130, 0, 0, 0.5);
 }
 
 .tree-view_item, .leaf {
