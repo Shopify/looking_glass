@@ -60,12 +60,12 @@ module LookingGlass
       RUBY_ENGINE RUBY_ENGINE_VERSION TracePoint ARGV DidYouMean
     )).freeze
 
-    def uncached_infer_from(key)
+    def uncached_infer_from(key, exclusions = [])
       filename = CLASS_DEFINITION_POINTS[key]
 
       if filename.nil?
         return 'core' if CORE.include?(key)
-        return try_harder(key)
+        return try_harder(key, exclusions) ############
       end
 
       if filename.start_with?(HookingClass.project_root)
@@ -102,19 +102,18 @@ module LookingGlass
       "unknown"
     end
 
-    def try_harder(key)
+    def try_harder(key, exclusions = [])
       obj = Object.const_get(key)
       return 'unknown' unless obj.is_a?(Module)
+      exclusions << obj
 
-      obj.constants.each do |const|
+      obj.constants.each do |const| ##############
         child = obj.const_get(const)
         next unless child.is_a?(Module)
 
-        # don't recurse infinitely when an unknown module directly includes itself.
-        # TODO: we should maybe try harder to prevent cycles when e.g. A incl B incl A
-        next if child == obj
+        next if exclusions.include?(child)
 
-        pkg = uncached_infer_from(child.inspect)
+        pkg = uncached_infer_from(child.inspect, exclusions)
         return pkg unless pkg == 'unknown'
       end
 
