@@ -8,7 +8,7 @@ module LookingGlass
     extend self
 
     def infer_from(mod)
-      infer_from_key(mod.inspect)
+      infer_from_key(LookingGlass.module_invoke(mod, :inspect))
     end
 
     def infer_from_toplevel(sym)
@@ -113,7 +113,7 @@ module LookingGlass
 
         next if exclusions.include?(child)
 
-        pkg = uncached_infer_from(child.inspect, exclusions)
+        pkg = uncached_infer_from(LookingGlass.module_invoke(child, :inspect), exclusions)
         return pkg unless pkg == 'unknown'
       end
 
