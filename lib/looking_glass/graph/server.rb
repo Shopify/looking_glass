@@ -8,11 +8,13 @@ module LookingGlass
       }.freeze
 
       def call(env)
+        puts "<- #{Time.now}"
         req  = Rack::Request.new(env)
         data = JSON.parse(req.body.read)
         q    = data['query']
         v    = data['variables']
         res  = Schema.execute(q, variables: v)
+        puts "-> #{Time.now}"
 
         [200, JSON_TYPE, [JSON.dump(res)]]
       end

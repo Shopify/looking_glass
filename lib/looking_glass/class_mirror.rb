@@ -8,6 +8,11 @@ module LookingGlass
       @subject.is_a?(Class)
     end
 
+    def package
+      file = LookingGlass::CLASS_DEFINITION_POINTS[@subject]
+      package = LookingGlass::PackageInference.infer_from(file)
+    end
+
     # The known class variables.
     # @see #instance_variables
     # @return [Array<FieldMirror>]
@@ -161,9 +166,13 @@ module LookingGlass
     end
 
     # to work around overridden `name` methods
-    MODULE_INSPECT = Module.method(:inspect).unbind
+    MODULE_INSPECT = Module.instance_method(:inspect)
     def name
       MODULE_INSPECT.bind(@subject).call
+    rescue
+      puts @subject.inspect
+      puts @subject.class
+      raise
     end
 
     def demodulized_name
