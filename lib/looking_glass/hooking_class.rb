@@ -1,23 +1,28 @@
 module LookingGlass
   CLASS_DEFINITION_POINTS = {}
-  MODULE_INSPECT = Module.method(:inspect).unbind
+
+  @unbound_module_methods = {}
+  def self.module_invoke(receiver, msg)
+    meth = (@unbound_module_methods[msg] ||= Module.method(msg).unbind)
+    meth.bind(receiver).call
+  end
 
   module HookingClass
     class << self
       attr_reader :project_root
       def apply(project_root)
         @project_root = project_root
-
-        Class.class_eval do
-          alias_method :old_inherited, :inherited
-          def inherited(subclass)
-            file = caller[0].sub(/:\d+:in.*/, '')
-            key = MODULE_INSPECT.bind(subclass).call
-            LookingGlass::CLASS_DEFINITION_POINTS[key] = file
-            old_inherited(subclass)
-          end
-        end
       end
     end
+  end
+end
+
+class Class
+  alias_method :__lg_orig_inherited, :inherited
+  def inherited(subclass)
+    file = caller[0].sub(/:\d+:in.*/, '')
+    key = LookingGlass.module_invoke(subclass, :inspect)
+    LookingGlass::CLASS_DEFINITION_POINTS[key] = file
+    __lg_orig_inherited(subclass)
   end
 end
