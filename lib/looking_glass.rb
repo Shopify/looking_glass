@@ -16,7 +16,8 @@ module LookingGlass
       pkg = PackageInference.infer_from_toplevel(const)
       packages[pkg] = true
     end
-    package_mirrors(packages.keys.sort)
+    toplevel_packages = packages.keys.map { |pkg| pkg.sub(/:.*/, '') }.sort
+    package_mirrors(toplevel_packages)
   end
 
   # This method can be used to query the system for known modules. It

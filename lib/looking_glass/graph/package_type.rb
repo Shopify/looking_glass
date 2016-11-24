@@ -15,7 +15,7 @@ module LookingGlass
       # field :reflectee
 
       # PackageMirror
-      field :topLevelClasses, types[!ClassType], property: :top_level_classes
+      field :children, types[!PackageChildrenUnionType]
     end
   end
 end

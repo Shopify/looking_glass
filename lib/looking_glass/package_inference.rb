@@ -19,6 +19,10 @@ module LookingGlass
       @inverse_cache[pkg]
     end
 
+    def qualified_packages
+      @inverse_cache.keys
+    end
+
     private
 
     def infer_from_key(key)
@@ -68,7 +72,7 @@ module LookingGlass
         return 'application'
       end
 
-      return 'stdlib' if filename.start_with?(rubylibdir)
+      return 'core:stdlib' if filename.start_with?(rubylibdir)
 
       if defined?(Gem)
         gem_path.each do |path|
@@ -76,7 +80,7 @@ module LookingGlass
           # extract e.g. 'bundler-1.13.6'
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gem:#$1"
+            return "gems:#$1"
           end
         end
       end
@@ -86,7 +90,7 @@ module LookingGlass
         if filename.start_with?(path)
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gem:#$1"
+            return "gems:#$1"
           end
         end
       end

@@ -6,16 +6,31 @@ module LookingGlass
     reflect!(String)
 
     def name
+      @subject.sub(/.*:/, '')
+    end
+
+    def fullname
       @subject
     end
 
-    def top_level_classes
+    def children
       names = PackageInference.contents_of_package(@subject)
-      classes = names
+      classes = (names || [])
         .map { |n| Object.const_get(n) }
         .select { |c| c.is_a?(Module) }
         .sort_by(&:name)
-      mirrors(classes)
+      class_mirrors = mirrors(classes)
+
+      # .map    { |pkg| pkg.sub(/#{Regexp.quote(@subject)}:.*?:.*/) }
+      subpackages = PackageInference.qualified_packages
+        .select { |pkg| pkg.start_with?("#{@subject}:") }
+        .sort
+
+
+      puts subpackages.inspect
+
+      package_mirrors = subpackages.map { |pkg| PackageMirror.reflect(pkg) }
+      package_mirrors.concat(class_mirrors)
     end
   end
 end
