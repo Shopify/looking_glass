@@ -9,8 +9,7 @@ module LookingGlass
     end
 
     def package
-      file = LookingGlass::CLASS_DEFINITION_POINTS[@subject]
-      package = LookingGlass::PackageInference.infer_from(file)
+      # TODO(burke)
     end
 
     # The known class variables.
@@ -128,7 +127,7 @@ module LookingGlass
           @subject.const_get(c)
         end
       end
-      mirrors(nc.compact.select { |c| c.is_a?(Module) })
+      mirrors(nc.compact.select { |c| c.is_a?(Module) }.sort_by(&:name))
     end
 
     def nested_class_count

@@ -11,7 +11,7 @@ module LookingGlass
           alias_method :old_inherited, :inherited
           def inherited(subclass)
             file = caller[0].sub(/:\d+:in.*/, '')
-            LookingGlass::CLASS_DEFINITION_POINTS[subclass] = file
+            LookingGlass::CLASS_DEFINITION_POINTS[subclass.inspect] = file
             old_inherited(subclass)
           end
         end

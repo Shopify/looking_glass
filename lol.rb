@@ -1,5 +1,8 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 
+require 'looking_glass/hooking_class'
+LookingGlass::HookingClass.apply(File.expand_path('../', __FILE__))
+
 require 'looking_glass/graph'
 require 'looking_glass/graph/server'
 
@@ -10,6 +13,8 @@ module LookingGlass
         case object
         when Viewer
           'v'
+        when PackageMirror
+          "p#{object.instance_variable_get(:@subject)}"
         when ClassMirror
           "c#{object.subject_id}"
         when MethodMirror
@@ -29,6 +34,8 @@ module LookingGlass
           Viewer.new
         when '-' # just wants empty result, usually '-1'
           return nil
+        when 'p'
+          PackageMirror.reflect(id[1..-1])
         when 'c' # class
           obj = ObjectSpace._id2ref(id[1..-1].to_i)
           obj ? LookingGlass.reflect(obj) : nil
@@ -47,6 +54,8 @@ module LookingGlass
         case object
         when Viewer
           ViewerType
+        when PackageMirror
+          PackageType
         when ClassMirror
           ClassType
         when MethodMirror
@@ -69,6 +78,10 @@ module LookingGlass
           .sort_by(&:name)
           .map { |mod| LookingGlass.reflect(mod) }
       end
+
+      def packages
+        LookingGlass.packages
+      end
     end
 
     ViewerType = GraphQL::ObjectType.define do
@@ -77,6 +90,11 @@ module LookingGlass
       global_id_field :id
 
       field :classes, types[ClassType]
+
+      field :packages do
+        type types[PackageType]
+        resolve ->(_, _, _) { LookingGlass.packages }
+      end
 
       field :classDetail do
         type ClassType
