@@ -6,9 +6,9 @@ module LookingGlass
       end
 
       def resolve(klass)
-        try_fast(klass, klass.name) ||
+        try_fast(klass, klass.name)                   ||
           try_fast(klass.singleton_class, klass.name) ||
-          try_slow(klass) ||
+          try_slow(klass)                             ||
           try_slow(klass.singleton_class)
       end
 
