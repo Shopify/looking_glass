@@ -6,24 +6,24 @@ module LookingGlass
       end
 
       def resolve(klass)
-        if file = try_fast(klass)
-          return file
-        end
-        try_slow(klass)
+        try_fast(klass, klass.name) ||
+          try_fast(klass.singleton_class, klass.name) ||
+          try_slow(klass) ||
+          try_slow(klass.singleton_class)
       end
 
-      def try_fast(klass)
+      def try_fast(klass, class_name)
         klass.instance_methods(false).each do |name|
           meth = klass.instance_method(name)
 
           file = begin
             meth.source_location[0]
-          rescue # ???
+          rescue # MethodSource::Something...
             next
           end
 
           contents = (@files[file] ||= File.open(file, 'r') { |f| f.readpartial(4096) })
-          n = klass.name.sub(/.*::/, '') # last component of module name
+          n = class_name.sub(/.*::/, '') # last component of module name
           return file if contents =~ /^\s+(class|module) ([\S]+::)?#{Regexp.quote(n)}\s/
         end
         nil
@@ -36,12 +36,9 @@ module LookingGlass
 
         defined_directly_on_class = methods
           .select do |meth|
-            # aliased methods can show up with instance_methods(false)
-            # but their source_location and owner point to the module they came from.
-            meth.owner == klass &&
-              meth.source =~ /\A\s+def #{Regexp.quote(meth.name)}/
             # as a mostly-useful heuristic, we just eliminate everything that was
             # defined using a template eval or define_method.
+            meth.source =~ /\A\s+def (self\.)?#{Regexp.quote(meth.name)}/
           end
 
         files = Hash.new(0)
@@ -54,7 +51,7 @@ module LookingGlass
           end
         end
 
-        file = files.max_by { |k, v| v }
+        file = files.max_by { |_k, v| v }
         file ? file[0] : nil
       end
     end
