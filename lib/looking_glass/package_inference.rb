@@ -65,7 +65,7 @@ module LookingGlass
 
       if filename.nil?
         return 'core' if CORE.include?(key)
-        return try_harder(key, exclusions) ############
+        return try_harder(key, exclusions)
       end
 
       if filename.start_with?(LookingGlass.project_root)
@@ -107,18 +107,13 @@ module LookingGlass
       return 'unknown' unless obj.is_a?(Module)
       exclusions << obj
 
-      obj.constants.each do |const| ##############
+      obj.constants.each do |const|
         child = obj.const_get(const)
         next unless child.is_a?(Module)
 
         next if exclusions.include?(child)
 
-        begin
-          pkg = uncached_infer_from(LookingGlass.module_invoke(child, :inspect), exclusions)
-        rescue TypeError
-          puts child.inspect
-          exit 1
-        end
+        pkg = uncached_infer_from(LookingGlass.module_invoke(child, :inspect), exclusions)
         return pkg unless pkg == 'unknown'
       end
 

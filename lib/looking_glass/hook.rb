@@ -1,13 +1,9 @@
+require 'looking_glass/invoke'
+
 module LookingGlass
   CLASS_DEFINITION_POINTS = {}
 
   NoGemfile = Class.new(StandardError)
-
-  @unbound_module_methods = {}
-  def self.module_invoke(receiver, msg)
-    meth = (@unbound_module_methods[msg] ||= Module.method(msg).unbind)
-    meth.bind(receiver).call
-  end
 
   class << self
     attr_accessor :project_root
