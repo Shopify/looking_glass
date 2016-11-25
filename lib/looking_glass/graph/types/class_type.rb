@@ -27,10 +27,10 @@ module LookingGlass
         field :classVariables,         !types[FieldType],     property: :class_variables
         field :classInstanceVariables, !types[FieldType],     property: :class_instance_variables
         field :sourceFiles,            !types[!types.String], property: :source_files
-        field :singletonClass,    -> { !ClassType },          property: :singleton_class
-        field :isSingletonClass,       !types.Boolean,        property: :is_singleton_class
+        field :singletonClass, -> { !ClassType }, property: :singleton_class
+        field :isSingletonClass,       !types.Boolean, property: :is_singleton_class
         field :mixins,            -> { !types[ClassType] }
-        field :superclass,        -> {  ClassType }
+        field :superclass,        -> { ClassType }
         field :subclasses,        -> { !types[ClassType] }
         field :ancestors,         -> { !types[ClassType] }
         field :constants,              !types[FieldType]

@@ -80,7 +80,7 @@ module LookingGlass
           # extract e.g. 'bundler-1.13.6'
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gems:#$1"
+            return "gems:#{Regexp.last_match(1)}"
           end
         end
       end
@@ -90,7 +90,7 @@ module LookingGlass
         if filename.start_with?(path)
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gems:#$1"
+            return "gems:#{Regexp.last_match(1)}"
           end
         end
       end
@@ -117,7 +117,7 @@ module LookingGlass
         return pkg unless pkg == 'unknown'
       end
 
-      return 'unknown'
+      'unknown'
     end
 
     def rubylibdir

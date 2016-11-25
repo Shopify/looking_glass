@@ -1,25 +1,30 @@
 require 'test_helper'
-require 'looking_glass/disasm_visitor'
+require 'looking_glass/index/marker'
 
 module LookingGlass
   class ReferencesVisitorTest < MiniTest::Test
-
     class Victim
       def lol
-        @ivar += 1  # touch one of the ivars
-        self.to_s   # send to_s
+        @ivar += 1 # touch one of the ivars
+        to_s # send to_s
         Kernel.exit # reference another class
       end
-    end 
+    end
 
     def test_victim_class
-      victim = LookingGlass.classes.detect {|c| c.reflectee == Victim }
-      method = victim.method(:lol)
-      visitor = method.references_visitor
+      method = Victim.reflect.methods.first
+      refs = method.references
+      assert_equal(4, refs.size)
+      c1 = Marker.new(type: Marker::TYPE_CLASS_REFERENCE, message: :Kernel, file: __FILE__, line: 10)
+      m1 = Marker.new(type: Marker::TYPE_METHOD_REFERENCE, message: :to_s, file: __FILE__, line: 9)
+      m2 = Marker.new(type: Marker::TYPE_METHOD_REFERENCE, message: :exit, file: __FILE__, line: 10)
+      f1 = Marker.new(type: Marker::TYPE_FIELD_REFERENCE, message: :@ivar, file: __FILE__, line: 8)
 
-      assert_equal([:to_s, :exit], visitor.method_refs)
-      assert_equal([:Kernel], visitor.class_refs)
-      assert_equal([:@ivar], visitor.field_refs)      
+      assert_equal('lol', method.selector) # ensure that we have the right method
+      assert(refs.include?(c1))
+      assert(refs.include?(m1))
+      assert(refs.include?(m2))
+      assert(refs.include?(f1))
     end
   end
 end

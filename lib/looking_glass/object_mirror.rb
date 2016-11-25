@@ -2,8 +2,6 @@ module LookingGlass
   # A mirror class. It is the most generic mirror and should be able
   # to reflect on any object you can get at in a given system.
   class ObjectMirror < Mirror
-    reflect!(BasicObject)
-
     # @return [FieldMirror] the instance variables of the object
     def variables
       field_mirrors(@subject.instance_variables)

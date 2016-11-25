@@ -3,8 +3,6 @@ require 'looking_glass/package_inference'
 
 module LookingGlass
   class PackageMirror < Mirror
-    reflect!(String)
-
     def name
       @subject.sub(/.*:/, '')
     end
@@ -25,7 +23,6 @@ module LookingGlass
       subpackages = PackageInference.qualified_packages
         .select { |pkg| pkg.start_with?("#{@subject}:") }
         .sort
-
 
       puts subpackages.inspect
 

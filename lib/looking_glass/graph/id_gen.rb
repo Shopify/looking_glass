@@ -61,4 +61,3 @@ module LookingGlass
     end
   end
 end
-
