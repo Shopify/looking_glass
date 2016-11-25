@@ -12,6 +12,8 @@ module LookingGlass
           try_slow(klass.singleton_class)
       end
 
+      private
+
       def try_fast(klass, class_name)
         klass.instance_methods(false).each do |name|
           meth = klass.instance_method(name)
