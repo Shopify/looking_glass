@@ -60,51 +60,74 @@ module LookingGlass
       RUBY_ENGINE RUBY_ENGINE_VERSION TracePoint ARGV DidYouMean
     )).freeze
 
+    CORE_PACKAGE         = 'core'.freeze
+    CORE_STDLIB_PACKAGE  = 'core:stdlib'.freeze
+    APPLICATION_PACKAGE  = 'application'.freeze
+    GEM_PACKAGE_PREFIX   = 'gems:'.freeze
+    UNKNOWN_PACKAGE      = 'unknown'.freeze
+    UNKNOWN_EVAL_PACKAGE = 'unknown:eval'.freeze
+
     def uncached_infer_from(key, exclusions = [])
-      filename = CLASS_DEFINITION_POINTS[key]
+      return CORE_PACKAGE if CORE.include?(nesting_first(key))
+
+      filename = determine_filename(key)
 
       if filename.nil?
-        return 'core' if CORE.include?(key)
         return try_harder(key, exclusions)
       end
 
-      if filename.start_with?(LookingGlass.project_root)
-        return 'application'
+      return APPLICATION_PACKAGE if filename.start_with?(LookingGlass.project_root)
+      return CORE_STDLIB_PACKAGE if filename.start_with?(rubylibdir)
+
+      if pkg = try_rubygems(filename)
+        return pkg
       end
 
-      return 'core:stdlib' if filename.start_with?(rubylibdir)
+      if pkg = try_bundler(filename)
+        return pkg
+      end
 
+      return UNKNOWN_EVAL_PACKAGE if filename == '(eval)'
+
+      UNKNOWN_PACKAGE
+    end
+
+    def try_rubygems(filename)
       if defined?(Gem)
         gem_path.each do |path|
           next unless filename.start_with?(path)
           # extract e.g. 'bundler-1.13.6'
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gems:#$1"
+            return GEM_PACKAGE_PREFIX + $1
           end
         end
       end
+    end
 
+    def try_bundler(filename)
       if defined?(Bundler)
         path = bundle_path
         if filename.start_with?(path)
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gems:#$1"
+            return GEM_PACKAGE_PREFIX + $1
           end
         end
       end
+    end
 
-      if filename == '(eval)'
-        return "unknown"
+    def determine_filename(key)
+      if fn = CLASS_DEFINITION_POINTS[key]
+        return fn
       end
 
-      "unknown"
+      nil
     end
 
     def try_harder(key, exclusions = [])
       obj = Object.const_get(key)
-      return 'unknown' unless obj.is_a?(Module)
+      return 'obj-not-module' unless obj.is_a?(Module)
       exclusions << obj
 
       obj.constants.each do |const|
@@ -117,7 +140,11 @@ module LookingGlass
         return pkg unless pkg == 'unknown'
       end
 
-      return 'unknown'
+      return 'harder-failed'
+    end
+
+    def nesting_first(n)
+      n.sub(/::.*/, '')
     end
 
     def rubylibdir
