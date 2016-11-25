@@ -2,17 +2,18 @@ require 'rbconfig'
 require 'set'
 
 require 'looking_glass/hook'
+require 'looking_glass/package_inference/class_to_file_resolver'
 
 module LookingGlass
   module PackageInference
     extend self
 
-    def infer_from(mod)
-      infer_from_key(LookingGlass.module_instance_invoke(mod, :inspect))
+    def infer_from(mod, resolver = ClassToFileResolver.new)
+      infer_from_key(LookingGlass.module_instance_invoke(mod, :inspect), resolver)
     end
 
-    def infer_from_toplevel(sym)
-      infer_from_key(sym.to_s)
+    def infer_from_toplevel(sym, resolver = ClassToFileResolver.new)
+      infer_from_key(sym.to_s, resolver)
     end
 
     def contents_of_package(pkg)
@@ -25,14 +26,14 @@ module LookingGlass
 
     private
 
-    def infer_from_key(key)
+    def infer_from_key(key, resolver)
       @inference_cache ||= {}
       @inverse_cache ||= {}
 
       cached = @inference_cache[key]
       return cached if cached
 
-      pkg = uncached_infer_from(key)
+      pkg = uncached_infer_from(key, [], resolver)
       @inference_cache[key] = pkg
       @inverse_cache[pkg] ||= []
       @inverse_cache[pkg] << key
@@ -67,13 +68,13 @@ module LookingGlass
     UNKNOWN_PACKAGE      = 'unknown'.freeze
     UNKNOWN_EVAL_PACKAGE = 'unknown:eval'.freeze
 
-    def uncached_infer_from(key, exclusions = [])
+    def uncached_infer_from(key, exclusions, resolver)
       return CORE_PACKAGE if CORE.include?(nesting_first(key))
 
-      filename = determine_filename(key)
+      filename = determine_filename(key, resolver)
 
       if filename.nil?
-        return try_harder(key, exclusions)
+        return try_harder(key, exclusions, resolver)
       end
 
       return APPLICATION_PACKAGE if filename.start_with?(LookingGlass.project_root)
@@ -117,15 +118,14 @@ module LookingGlass
       end
     end
 
-    def determine_filename(key)
+    def determine_filename(key, resolver)
       if fn = CLASS_DEFINITION_POINTS[key]
         return fn
       end
-
-      nil
+      resolver.resolve(Object.const_get(key))
     end
 
-    def try_harder(key, exclusions = [])
+    def try_harder(key, exclusions, resolver)
       obj = Object.const_get(key)
       return 'obj-not-module' unless obj.is_a?(Module)
       exclusions << obj
@@ -136,11 +136,11 @@ module LookingGlass
 
         next if exclusions.include?(child)
 
-        pkg = uncached_infer_from(LookingGlass.module_instance_invoke(child, :inspect), exclusions)
+        pkg = uncached_infer_from(LookingGlass.module_instance_invoke(child, :inspect), exclusions, resolver)
         return pkg unless pkg == 'unknown'
       end
 
-      return 'harder-failed'
+      return 'unknown'
     end
 
     def nesting_first(n)
