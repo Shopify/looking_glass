@@ -81,7 +81,7 @@ module LookingGlass
     end
 
     def test_constant_value
-      assert_equal("Bar".inspect, @m.constant("Foo").value.name)
+      assert_equal("Bar", @m.constant("Foo").value.name)
     end
   end
 end

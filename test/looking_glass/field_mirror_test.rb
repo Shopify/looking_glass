@@ -8,14 +8,14 @@ module LookingGlass
       end
 
       def test_value
-        assert_equal(@nom.sub(/@@?/, '').inspect, @m.value.name)
+        assert_equal(@nom.sub(/@@?/, ''), @m.value.name)
       end
 
       def test_set_value
         old_value = @o.send(:"#{@class_side}_variable_get", @nom)
         @m.value = "changed"
         assert_equal("changed", @o.send(:"#{@class_side}_variable_get", @nom))
-        assert_equal("changed".inspect, @m.value.name)
+        assert_equal("changed", @m.value.name)
         @m.value = old_value
       end
 
@@ -80,7 +80,7 @@ module LookingGlass
     end
 
     def test_value
-      assert_equal(@name.downcase.inspect, @m.value.name)
+      assert_equal(@name.downcase, @m.value.name)
     end
 
     def test_set_value
@@ -88,7 +88,7 @@ module LookingGlass
         old_value = @m.value.reflectee
         @m.value = "changed"
         assert_equal("changed", @o.const_get(@name))
-        assert_equal("changed".inspect, @m.value.name)
+        assert_equal("changed", @m.value.name)
         @m.value = old_value
       end
     end
