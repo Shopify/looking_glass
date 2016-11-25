@@ -1,18 +1,27 @@
 module LookingGlass
   CLASS_DEFINITION_POINTS = {}
 
+  NoGemfile = Class.new(StandardError)
+
   @unbound_module_methods = {}
   def self.module_invoke(receiver, msg)
     meth = (@unbound_module_methods[msg] ||= Module.method(msg).unbind)
     meth.bind(receiver).call
   end
 
-  module HookingClass
-    class << self
-      attr_reader :project_root
-      def apply(project_root)
-        @project_root = project_root
-      end
+  class << self
+    attr_accessor :project_root
+  end
+end
+
+begin
+  unless LookingGlass.project_root
+    appline = caller.detect { |line| line !~ /:in `require'/ }
+    f = File.expand_path(appline.sub(/:\d.*/, ''))
+    LookingGlass.project_root = loop do
+      f = File.dirname(f)
+      raise LookingGlass::NoGemfile if f == '/'
+      break f if File.exist?("#{f}/Gemfile")
     end
   end
 end

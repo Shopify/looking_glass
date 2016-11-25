@@ -1,7 +1,7 @@
 require 'rbconfig'
 require 'set'
 
-require 'looking_glass/hooking_class'
+require 'looking_glass/hook'
 
 module LookingGlass
   module PackageInference
@@ -68,7 +68,7 @@ module LookingGlass
         return try_harder(key, exclusions) ############
       end
 
-      if filename.start_with?(HookingClass.project_root)
+      if filename.start_with?(LookingGlass.project_root)
         return 'application'
       end
 
@@ -113,7 +113,12 @@ module LookingGlass
 
         next if exclusions.include?(child)
 
-        pkg = uncached_infer_from(LookingGlass.module_invoke(child, :inspect), exclusions)
+        begin
+          pkg = uncached_infer_from(LookingGlass.module_invoke(child, :inspect), exclusions)
+        rescue TypeError
+          puts child.inspect
+          exit 1
+        end
         return pkg unless pkg == 'unknown'
       end
 

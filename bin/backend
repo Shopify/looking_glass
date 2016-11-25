@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'looking_glass/hook'
+
+require 'looking_glass/graph/server'
+require 'rack'
+Rack::Handler::WEBrick.run(LookingGlass::Graph::Server.new)

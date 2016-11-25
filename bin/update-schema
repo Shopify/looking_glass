@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+
+require 'looking_glass/graph'
+require 'graphql'
+
+schema = LookingGlass::Graph::Schema.execute(GraphQL::Introspection::INTROSPECTION_QUERY)
+File.write('frontend/data/schema.json', JSON.dump(schema))
+puts 'schema.json updated'

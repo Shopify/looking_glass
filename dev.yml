@@ -9,7 +9,5 @@ commands:
   test:          bundle exec bin/testunit
   build:         gem build *.gemspec
   frontend:      'cd frontend && ./node_modules/.bin/babel-node ./server.js'
-  backend:       'ruby -I./lib lol.rb'
-  update-schema: 'ruby -I./lib lol.rb u'
 open:
   app: http://localhost:3000

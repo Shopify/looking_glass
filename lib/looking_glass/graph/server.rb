@@ -1,5 +1,7 @@
 require 'json'
 
+require 'looking_glass/graph'
+
 module LookingGlass
   module Graph
     class Server
