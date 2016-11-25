@@ -49,8 +49,9 @@ body {
   line-height: 1.3em;
 }
 
-code {
-  font-family: Monaco, courier, monospace;
+code, pre {
+  font-family: Menlo, monospace;
+  font-size: 11px;
 }
 
 a {

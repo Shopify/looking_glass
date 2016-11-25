@@ -97,14 +97,15 @@ module LookingGlass
       visibility?(:private)
     end
 
-    UNBOUND_ALLOC = Class.method(:allocate).unbind
     def super_method
       owner = @subject.send(:owner)
 
       if owner.is_a?(Class)
-        bound_alloc = UNBOUND_ALLOC.bind(owner)
-        instance = bound_alloc.call
-        meth = @subject.bind(instance).super_method.unbind
+        meth = LookingGlass
+          .class_singleton_method(:allocate)
+          .bind(instance)
+          .super_method
+          .unbind
       else
         meth = @subject.bind(owner).super_method.unbind
       end

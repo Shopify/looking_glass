@@ -26,7 +26,7 @@ class Class
   alias_method :__lg_orig_inherited, :inherited
   def inherited(subclass)
     file = caller[0].sub(/:\d+:in.*/, '')
-    key = LookingGlass.module_invoke(subclass, :inspect)
+    key = LookingGlass.module_instance_invoke(subclass, :inspect)
     LookingGlass::CLASS_DEFINITION_POINTS[key] = file
     __lg_orig_inherited(subclass)
   end
