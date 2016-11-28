@@ -104,6 +104,7 @@ module LookingGlass
           end
         end
       end
+      nil
     end
 
     def try_bundler(filename)
@@ -116,6 +117,7 @@ module LookingGlass
           end
         end
       end
+      nil
     end
 
     def determine_filename(key, resolver)

@@ -6,6 +6,7 @@ module LookingGlass
       end
 
       def resolve(klass)
+        return nil if klass.nil?
         try_fast(klass, klass.name)                   ||
           try_fast(klass.singleton_class, klass.name) ||
           try_slow(klass)                             ||
@@ -19,8 +20,10 @@ module LookingGlass
           meth = klass.instance_method(name)
 
           file = begin
-            meth.source_location[0]
-          rescue # MethodSource::Something...
+            sl = meth.source_location
+            next unless sl
+            sl[0]
+          rescue MethodSource::SourceNotFoundError
             next
           end
 
@@ -47,8 +50,10 @@ module LookingGlass
 
         defined_directly_on_class.each do |meth|
           begin
-            files[meth.source_location[0]] += 1
-          rescue # which class?
+            sl = meth.source_location[0]
+            raise unless sl
+            files[sl[0]] += 1
+          rescue MethodSource::SourceNotFoundError
             raise
           end
         end
