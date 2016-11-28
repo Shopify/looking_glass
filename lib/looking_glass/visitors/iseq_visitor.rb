@@ -51,7 +51,7 @@ module LookingGlass
       @pc = 0
       @label = nil
       @bytecode.each_with_index do |bc|
-        if bc.class == Integer
+        if (bc.class == Integer || bc.class == Fixnum)
           @line = bc # bare line number
           next # line numbers are not executable
         elsif bc.class == Symbol
