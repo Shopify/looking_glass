@@ -1,0 +1,1 @@
+require 'looking_glass/index/class_extension_indexer'

@@ -7,7 +7,7 @@ require 'looking_glass/method_mirror'
 require 'looking_glass/package_mirror'
 require 'looking_glass/package_inference'
 require 'looking_glass/class_mixin'
-require 'looking_glass/index/indexer'
+require 'looking_glass/indexers'
 
 module LookingGlass
   extend self
@@ -15,7 +15,10 @@ module LookingGlass
   @class_mirrors = {}
   @constant_mirrors = {}
   @watches = {}
-  @logger = Logger.new(STDOUT)
+
+  def logger
+    @logger = Logger.new(STDOUT)
+  end
 
   def packages
     packages = {}
