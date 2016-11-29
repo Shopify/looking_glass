@@ -2,7 +2,11 @@ module LookingGlass
   # A specific mirror for a class, that includes all the capabilites
   # and information we can gather about classes.
   class ClassMirror < ObjectMirror
-    reflect!(Module)
+    def initialize(obj)
+      super(obj)
+      @field_mirrors = {}
+      @method_mirrors = {}
+    end
 
     def is_class
       @subject.is_a?(Class)
@@ -10,6 +14,10 @@ module LookingGlass
 
     def package
       # TODO(burke)
+    end
+
+    def fields
+      [constants, class_variables, class_instance_variables, instance_variables].flatten
     end
 
     # The known class variables.
@@ -176,6 +184,14 @@ module LookingGlass
 
     def demodulized_name
       name.split('::').last
+    end
+
+    def intern_method_mirror(mirror)
+      @method_mirrors[mirror.name] ||= mirror
+    end
+
+    def intern_field_mirror(mirror)
+      @field_mirrors[mirror.name] ||= mirror
     end
   end
 end

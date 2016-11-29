@@ -7,6 +7,7 @@ class MethodSpecFixture
   end
 
   def method_p_public; end
+
   def method_p_private; end
   private :method_p_private
   def method_p_protected; end

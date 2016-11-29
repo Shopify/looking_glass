@@ -18,8 +18,8 @@ module LookingGlass
         # MethodMirror
         field :file,                 types.String
         field :line,                 types.Int
-        field :selector,            !types.String
-        field :definingClass,  -> { !ClassType },      property: :defining_class
+        field :selector, !types.String
+        field :definingClass, -> { !ClassType }, property: :defining_class
         field :blockArgument,        FieldType,        property: :block_argument
         field :splatArgument,        FieldType,        property: :splat_argument
         field :optionalArguments,    types[FieldType], property: :optional_arguments
@@ -29,10 +29,10 @@ module LookingGlass
         # field :protected?
         # field :public?
         # field :private?
-        field :superMethod,     -> { MethodType },     property: :super_method
+        field :superMethod, -> { MethodType }, property: :super_method
         field :comment,              types.String
         field :source,               types.String
-        field :native_code,          types.String,     property: :native_code
+        field :native_code,          types.String, property: :native_code
         field :bytecode,             types.String
         field :sexp,                 types.String
       end

@@ -1,3 +1,5 @@
 *.gem
 .bundle
 .rubocop-http*
+.byebug_history
+.vscode/

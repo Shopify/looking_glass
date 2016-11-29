@@ -2,8 +2,8 @@ require 'method_source'
 require 'base64'
 require 'ripper'
 require 'pp'
-require 'looking_glass/iseq_visitor'
-require 'looking_glass/references_visitor'
+require 'looking_glass/visitors/iseq_visitor'
+require 'looking_glass/visitors/references_visitor'
 
 module LookingGlass
   # A MethodMirror should reflect on methods, but in a more general
@@ -17,8 +17,6 @@ module LookingGlass
   # representations (bytecode, source, ...), their debugging
   # information and statistical information
   class MethodMirror < Mirror
-    reflect! Method, UnboundMethod
-
     # @return [String, nil] The filename, if available
     def file
       sl = source_location
@@ -117,7 +115,7 @@ module LookingGlass
 
     # @return [String,nil] The source code of this method
     def source
-      unindent(@subject.send(:source))
+      @source ||= unindent(@subject.send(:source))
     rescue MethodSource::SourceNotFoundError
       nil
     end
@@ -129,12 +127,17 @@ module LookingGlass
       nil
     end
 
+    # Returns the instruction sequence for the method (cached)
+    def iseq
+      @iseq ||= RubyVM::InstructionSequence.of(@subject)
+    end
+
     # Returns the disassembled code if available.
     #
     # @return [String, nil] human-readable bytedcode dump
     def bytecode
-      iseq = RubyVM::InstructionSequence.of(@subject)
-      iseq ? iseq.disasm : nil
+      @bytecode ||= iseq.disasm if iseq
+      @bytecode
     end
 
     # Returns the parse tree if available
@@ -156,8 +159,10 @@ module LookingGlass
       @subject.name
     end
 
-    def references_visitor
-      LookingGlass::ReferencesVisitor.new.call(self)
+    def references
+      visitor = LookingGlass::ReferencesVisitor.new
+      visitor.call(self)
+      visitor.markers
     end
 
     private

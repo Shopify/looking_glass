@@ -1,4 +1,4 @@
-require 'yasmdata'
+require 'looking_glass/visitors/yasmdata'
 require 'pp'
 
 module LookingGlass
@@ -51,7 +51,7 @@ module LookingGlass
       @pc = 0
       @label = nil
       @bytecode.each_with_index do |bc|
-        if bc.class == Fixnum
+        if (bc.class == Integer || bc.class == Fixnum)
           @line = bc # bare line number
           next # line numbers are not executable
         elsif bc.class == Symbol

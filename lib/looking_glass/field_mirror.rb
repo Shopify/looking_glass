@@ -3,19 +3,6 @@ module LookingGlass
   # as well as constants.
   class FieldMirror < Mirror
     Field = Struct.new(:object, :name)
-    reflect! Field
-
-    def self.mirror_class(field)
-      return unless reflects? field
-      case field.name.to_s
-      when /^@@/
-        ClassVariableMirror
-      when /^@/
-        InstanceVariableMirror
-      else
-        ConstantMirror
-      end
-    end
 
     attr_reader :name
 
@@ -23,6 +10,11 @@ module LookingGlass
       super
       @object = obj.object
       @name = obj.name.to_s
+    end
+
+    # @return [ClassMirror] The class this method was originally defined in
+    def defining_class
+      LookingGlass.reflect(@object)
     end
   end
 end
