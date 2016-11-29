@@ -2,17 +2,18 @@ require 'rbconfig'
 require 'set'
 
 require 'looking_glass/hook'
+require 'looking_glass/package_inference/class_to_file_resolver'
 
 module LookingGlass
   module PackageInference
     extend self
 
-    def infer_from(mod)
-      infer_from_key(LookingGlass.module_instance_invoke(mod, :inspect))
+    def infer_from(mod, resolver = ClassToFileResolver.new)
+      infer_from_key(LookingGlass.module_instance_invoke(mod, :inspect), resolver)
     end
 
-    def infer_from_toplevel(sym)
-      infer_from_key(sym.to_s)
+    def infer_from_toplevel(sym, resolver = ClassToFileResolver.new)
+      infer_from_key(sym.to_s, resolver)
     end
 
     def contents_of_package(pkg)
@@ -25,14 +26,14 @@ module LookingGlass
 
     private
 
-    def infer_from_key(key)
+    def infer_from_key(key, resolver)
       @inference_cache ||= {}
       @inverse_cache ||= {}
 
       cached = @inference_cache[key]
       return cached if cached
 
-      pkg = uncached_infer_from(key)
+      pkg = uncached_infer_from(key, [], resolver)
       @inference_cache[key] = pkg
       @inverse_cache[pkg] ||= []
       @inverse_cache[pkg] << key
@@ -60,51 +61,75 @@ module LookingGlass
       RUBY_ENGINE RUBY_ENGINE_VERSION TracePoint ARGV DidYouMean
     )).freeze
 
-    def uncached_infer_from(key, exclusions = [])
-      filename = CLASS_DEFINITION_POINTS[key]
+    CORE_PACKAGE         = 'core'.freeze
+    CORE_STDLIB_PACKAGE  = 'core:stdlib'.freeze
+    APPLICATION_PACKAGE  = 'application'.freeze
+    GEM_PACKAGE_PREFIX   = 'gems:'.freeze
+    UNKNOWN_PACKAGE      = 'unknown'.freeze
+    UNKNOWN_EVAL_PACKAGE = 'unknown:eval'.freeze
+
+    def uncached_infer_from(key, exclusions, resolver)
+      return CORE_PACKAGE if CORE.include?(nesting_first(key))
+
+      filename = determine_filename(key, resolver)
 
       if filename.nil?
-        return 'core' if CORE.include?(key)
-        return try_harder(key, exclusions)
+        return try_harder(key, exclusions, resolver)
       end
 
-      if filename.start_with?(LookingGlass.project_root)
-        return 'application'
+      return APPLICATION_PACKAGE if filename.start_with?(LookingGlass.project_root)
+      return CORE_STDLIB_PACKAGE if filename.start_with?(rubylibdir)
+
+      if pkg = try_rubygems(filename)
+        return pkg
       end
 
-      return 'core:stdlib' if filename.start_with?(rubylibdir)
+      if pkg = try_bundler(filename)
+        return pkg
+      end
 
+      return UNKNOWN_EVAL_PACKAGE if filename == '(eval)'
+
+      UNKNOWN_PACKAGE
+    end
+
+    def try_rubygems(filename)
       if defined?(Gem)
         gem_path.each do |path|
           next unless filename.start_with?(path)
           # extract e.g. 'bundler-1.13.6'
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gems:#{Regexp.last_match(1)}"
+            return GEM_PACKAGE_PREFIX + $1
           end
         end
       end
+      nil
+    end
 
+    def try_bundler(filename)
       if defined?(Bundler)
         path = bundle_path
         if filename.start_with?(path)
           gem_with_version = filename[path.size..-1].sub(%r{/.*}, '')
           if gem_with_version =~ /(.*)-(\d|[a-f0-9]+$)/
-            return "gems:#{Regexp.last_match(1)}"
+            return GEM_PACKAGE_PREFIX + $1
           end
         end
       end
-
-      if filename == '(eval)'
-        return "unknown"
-      end
-
-      "unknown"
+      nil
     end
 
-    def try_harder(key, exclusions = [])
+    def determine_filename(key, resolver)
+      if fn = CLASS_DEFINITION_POINTS[key]
+        return fn
+      end
+      resolver.resolve(Object.const_get(key))
+    end
+
+    def try_harder(key, exclusions, resolver)
       obj = Object.const_get(key)
-      return 'unknown' unless obj.is_a?(Module)
+      return 'obj-not-module' unless obj.is_a?(Module)
       exclusions << obj
 
       obj.constants.each do |const|
@@ -113,11 +138,15 @@ module LookingGlass
 
         next if exclusions.include?(child)
 
-        pkg = uncached_infer_from(LookingGlass.module_instance_invoke(child, :inspect), exclusions)
+        pkg = uncached_infer_from(LookingGlass.module_instance_invoke(child, :inspect), exclusions, resolver)
         return pkg unless pkg == 'unknown'
       end
 
-      'unknown'
+      return 'unknown'
+    end
+
+    def nesting_first(n)
+      n.sub(/::.*/, '')
     end
 
     def rubylibdir
