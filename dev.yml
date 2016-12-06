@@ -5,10 +5,5 @@ up:
       yarn: true
       packages: [frontend]
   - bundler
-commands:
-  test:          bundle exec bin/testunit
-  build:         gem build *.gemspec
-  frontend:      'cd frontend && ./node_modules/.bin/babel-node ./server.js'
-  irb:           bundle exec irb -r looking_glass
 open:
   app: http://localhost:3000

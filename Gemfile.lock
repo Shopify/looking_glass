@@ -1,16 +1,21 @@
 PATH
+  remote: ../mirrors
+  specs:
+    mirrors (0.0.3)
+      method_source (~> 0.8)
+
+PATH
   remote: .
   specs:
     looking_glass (0.0.1)
       graphql (~> 1.2)
-      method_source (~> 0.8)
       rack (~> 2.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
     byebug (9.0.6)
-    graphql (1.2.4)
+    graphql (1.2.6)
     method_source (0.8.2)
     minitest (5.9.1)
     rack (2.0.1)
@@ -22,6 +27,7 @@ DEPENDENCIES
   byebug (~> 9.0.6)
   looking_glass!
   minitest (~> 5.0)
+  mirrors!
 
 BUNDLED WITH
    1.13.6
